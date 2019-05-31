@@ -12,4 +12,4 @@ pluginManagement {
 		}
 	}
 }
-rootProject.name = 'issues-deployer'
+rootProject.name = 'issues-deployer-back-end'

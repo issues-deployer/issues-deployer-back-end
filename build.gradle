@@ -4,6 +4,7 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'idea'
 
 group = 'com.vaddemgen'
 version = '0.0.1-SNAPSHOT'
@@ -15,15 +16,19 @@ repositories {
 	maven { url 'https://repo.spring.io/milestone' }
 }
 
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
 dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
-//	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation 'org.jetbrains:annotations:17+'
@@ -37,6 +42,29 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 	implementation 'org.apache.httpcomponents:httpclient:4+'
 
+	// https://mvnrepository.com/artifact/com.graphql-java/graphql-spring-boot-starter
+	implementation 'com.graphql-java:graphql-spring-boot-starter:5+'
+
+	// https://mvnrepository.com/artifact/com.graphql-java/graphql-java-tools
+	implementation 'com.graphql-java:graphql-java-tools:5+'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.5.RELEASE'
+
+	// https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testImplementation "org.junit.jupiter:junit-jupiter-api"
+
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation 'org.mockito:mockito-core:2+'
+
 //	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compileOnly 'org.projectlombok:lombok:1+'
+	annotationProcessor 'org.projectlombok:lombok:1+'
 }
