@@ -1,6 +1,6 @@
 package com.vaddemgen.issuesdeployer.base.applicationlayer.controller;
 
-import com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.model.Issue;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.Issue;
 import com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.model.Project;
 import com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.service.GitClient;
 import java.io.IOException;

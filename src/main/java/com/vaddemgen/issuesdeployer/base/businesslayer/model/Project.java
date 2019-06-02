@@ -1,40 +1,68 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import java.net.URL;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public final class Project {
+public final class Project implements DomainModel {
+
+  private final long id;
 
   @NotNull
-  private String code;
+  private final Group group;
 
   @NotNull
-  private String name;
+  private final String code;
 
   @Nullable
-  private String description;
+  private final String path;
+
+  @NotNull
+  private final String name;
 
   @Nullable
-  private String path;
+  private final String description;
 
   @Nullable
-  private ZonedDateTime createdAt;
+  private final ZonedDateTime createdAt;
 
   @Nullable
-  private ZonedDateTime lastActivityAt;
+  private final ZonedDateTime lastActivityAt;
 
   @Nullable
-  private URL webUrl;
+  private final URL webUrl;
+
+  @NotNull
+  private final List<Issue> issues;
+
+  public Stream<Issue> getIssues() {
+    return issues.stream();
+  }
+
+  @Override
+  public ProjectBuilder clonePartially() {
+    return builder()
+        .id(id)
+        .group(group)
+        .code(code)
+        .path(path)
+        .name(name)
+        .description(description)
+        .createdAt(createdAt)
+        .lastActivityAt(lastActivityAt)
+        .webUrl(webUrl)
+        .issues(issues);
+  }
 }
