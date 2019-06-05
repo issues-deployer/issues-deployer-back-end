@@ -15,7 +15,7 @@ public final class SubGroup extends Group {
   @NotNull
   private final SuperGroup superGroup;
 
-  public SubGroup(long id, @NotNull String code, @Nullable String path,
+  private SubGroup(long id, @NotNull String code, @Nullable String path,
       @NotNull String shortName, @Nullable String name,
       @Nullable URL webUrl, @Nullable String description,
       @NotNull List<Project> projects, @NotNull SuperGroup superGroup) {
@@ -41,6 +41,21 @@ public final class SubGroup extends Group {
         .superGroup(superGroup);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    SubGroup subGroup = (SubGroup) o;
+    return superGroup.equals(subGroup.superGroup);
+  }
+
   public static final class SubGroupBuilder extends GroupBuilder {
 
     @Nullable
@@ -52,7 +67,6 @@ public final class SubGroup extends Group {
       return this;
     }
 
-    @NotNull
     @Override
     public SubGroupBuilder path(@Nullable String path) {
       super.path(path);

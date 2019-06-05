@@ -53,6 +53,21 @@ public final class SuperGroup extends Group {
         .subGroups(subGroups);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    SuperGroup that = (SuperGroup) o;
+    return gitAccount.equals(that.gitAccount);
+  }
+
   public static final class SuperGroupBuilder extends GroupBuilder {
 
     @Nullable
@@ -71,7 +86,6 @@ public final class SuperGroup extends Group {
       return this;
     }
 
-    @NotNull
     public SuperGroupBuilder subGroups(@NotNull List<SubGroup> subGroups) {
       this.subGroups = Collections.unmodifiableList(subGroups);
       return this;
@@ -83,7 +97,6 @@ public final class SuperGroup extends Group {
       return this;
     }
 
-    @NotNull
     @Override
     public SuperGroupBuilder path(@Nullable String path) {
       super.path(path);

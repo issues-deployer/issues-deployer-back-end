@@ -4,6 +4,7 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,5 +65,30 @@ public final class Project implements DomainModel {
         .lastActivityAt(lastActivityAt)
         .webUrl(webUrl)
         .issues(issues);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Project project = (Project) o;
+    return id == project.id
+        && group.equals(project.group)
+        && code.equals(project.code)
+        && Objects.equals(path, project.path)
+        && name.equals(project.name)
+        && Objects.equals(description, project.description)
+        && Objects.equals(createdAt, project.createdAt)
+        && Objects.equals(lastActivityAt, project.lastActivityAt)
+        && Objects.equals(webUrl, project.webUrl);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, code);
   }
 }

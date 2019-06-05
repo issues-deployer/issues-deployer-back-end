@@ -4,8 +4,13 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
-public interface ProjectDataMapper {
+@Component
+public final class ProjectDataMapperImpl implements ProjectDataMapper {
 
-  Stream<Project> findProjectsByGroup(@NotNull Group superGroup);
+  @Override
+  public Stream<Project> findProjectsByGroup(@NotNull Group superGroup) {
+    return Stream.empty();
+  }
 }

@@ -1,7 +1,7 @@
 package com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.service;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Issue;
-import com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.model.Project;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import java.io.IOException;
 import java.util.stream.Stream;
 

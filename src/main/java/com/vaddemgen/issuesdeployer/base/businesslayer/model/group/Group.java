@@ -5,6 +5,7 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,29 @@ public abstract class Group implements DomainModel {
 
   public Stream<Project> getProjects() {
     return projects.stream();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Group group = (Group) o;
+    return id == group.id
+        && code.equals(group.code)
+        && Objects.equals(path, group.path)
+        && shortName.equals(group.shortName)
+        && Objects.equals(name, group.name)
+        && Objects.equals(webUrl, group.webUrl)
+        && Objects.equals(description, group.description);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, code);
   }
 
   protected static abstract class GroupBuilder {

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SubGroupDataMapperImpl implements SubGroupDataMapper {
+public final class SubGroupDataMapperImpl implements SubGroupDataMapper {
 
   @Override
   public Stream<SubGroup> findSubGroupsBySuperGroup(@NotNull SuperGroup superGroup) {
