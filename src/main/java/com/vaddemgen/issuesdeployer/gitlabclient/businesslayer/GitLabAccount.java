@@ -1,4 +1,4 @@
-package com.vaddemgen.issuesdeployer.gitclient.businesslayer;
+package com.vaddemgen.issuesdeployer.gitlabclient.businesslayer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -15,7 +15,7 @@ public final class GitLabAccount extends AbstractGitAccount {
   @NotNull
   private final String token;
 
-  private GitLabAccount(@Nullable Long id, @NotNull User user, @NotNull String token) {
+  private GitLabAccount(@Nullable Long id, @Nullable User user, @NotNull String token) {
     super(id, user);
     this.token = token;
   }
@@ -51,18 +51,13 @@ public final class GitLabAccount extends AbstractGitAccount {
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), token);
+    return Objects.hash(token);
   }
 
   public static final class GitLabAccountBuilder extends AbstractGitAccountBuilder {
 
     @Nullable
     private String token;
-
-    GitLabAccountBuilder token(@NotNull String token) {
-      this.token = token;
-      return this;
-    }
 
     @Override
     public GitLabAccountBuilder id(@Nullable Long id) {
@@ -71,14 +66,19 @@ public final class GitLabAccount extends AbstractGitAccount {
     }
 
     @Override
-    public GitLabAccountBuilder user(@NotNull User user) {
+    public GitLabAccountBuilder user(@Nullable User user) {
       super.user(user);
+      return this;
+    }
+
+    public GitLabAccountBuilder token(@NotNull String token) {
+      this.token = token;
       return this;
     }
 
     @Override
     public GitLabAccount build() {
-      return new GitLabAccount(id, requireNonNull(user), requireNonNull(token));
+      return new GitLabAccount(id, user, requireNonNull(token));
     }
   }
 }

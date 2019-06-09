@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,13 +13,13 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public final class SubGroup extends Group {
 
-  @NotNull
+  @Nullable
   private final SuperGroup superGroup;
 
   private SubGroup(long id, @NotNull String code, @Nullable String path,
       @NotNull String shortName, @Nullable String name,
       @Nullable URL webUrl, @Nullable String description,
-      @NotNull List<Project> projects, @NotNull SuperGroup superGroup) {
+      @NotNull List<Project> projects, @Nullable SuperGroup superGroup) {
     super(id, code, path, shortName, name, webUrl, description, projects);
     this.superGroup = superGroup;
   }
@@ -53,7 +54,7 @@ public final class SubGroup extends Group {
       return false;
     }
     SubGroup subGroup = (SubGroup) o;
-    return superGroup.equals(subGroup.superGroup);
+    return Objects.equals(superGroup, subGroup.superGroup);
   }
 
   public static final class SubGroupBuilder extends GroupBuilder {
@@ -103,7 +104,7 @@ public final class SubGroup extends Group {
       return this;
     }
 
-    public SubGroupBuilder superGroup(SuperGroup superGroup) {
+    public SubGroupBuilder superGroup(@Nullable SuperGroup superGroup) {
       this.superGroup = superGroup;
       return this;
     }
@@ -117,7 +118,7 @@ public final class SubGroup extends Group {
     @Override
     public SubGroup build() {
       return new SubGroup(id, requireNonNull(code), path, requireNonNull(shortName), name, webUrl,
-          description, projects, requireNonNull(superGroup));
+          description, projects, superGroup);
     }
   }
 }

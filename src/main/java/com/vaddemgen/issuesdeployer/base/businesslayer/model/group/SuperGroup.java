@@ -7,6 +7,7 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccou
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public final class SuperGroup extends Group {
 
-  @NotNull
+  @Nullable
   private final GitAccount gitAccount;
 
   @NotNull
@@ -23,7 +24,7 @@ public final class SuperGroup extends Group {
 
   public SuperGroup(long id, @NotNull String code, @Nullable String path, @NotNull String shortName,
       @Nullable String name, @Nullable URL webUrl, @Nullable String description,
-      @NotNull List<Project> projects, @NotNull GitAccount gitAccount,
+      @NotNull List<Project> projects, @Nullable GitAccount gitAccount,
       @NotNull List<SubGroup> subGroups) {
     super(id, code, path, shortName, name, webUrl, description, projects);
     this.gitAccount = gitAccount;
@@ -65,7 +66,7 @@ public final class SuperGroup extends Group {
       return false;
     }
     SuperGroup that = (SuperGroup) o;
-    return gitAccount.equals(that.gitAccount);
+    return Objects.equals(gitAccount, that.gitAccount);
   }
 
   public static final class SuperGroupBuilder extends GroupBuilder {
@@ -81,7 +82,7 @@ public final class SuperGroup extends Group {
       return this;
     }
 
-    public SuperGroupBuilder gitAccount(@NotNull GitAccount gitAccount) {
+    public SuperGroupBuilder gitAccount(@Nullable GitAccount gitAccount) {
       this.gitAccount = gitAccount;
       return this;
     }
@@ -136,7 +137,7 @@ public final class SuperGroup extends Group {
     @Override
     public SuperGroup build() {
       return new SuperGroup(id, requireNonNull(code), path, requireNonNull(shortName), name, webUrl,
-          description, projects, requireNonNull(gitAccount), subGroups);
+          description, projects, gitAccount, subGroups);
     }
   }
 }

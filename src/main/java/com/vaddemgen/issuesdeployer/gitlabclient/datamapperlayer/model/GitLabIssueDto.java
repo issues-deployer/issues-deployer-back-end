@@ -1,4 +1,4 @@
-package com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.model;
+package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model;
 
 import java.io.Serializable;
 import java.net.URL;

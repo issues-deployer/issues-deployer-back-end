@@ -58,7 +58,6 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
                 .parallel()
                 .map(this::fillProject)
                 .collect(Collectors.toList())
-
         ).build();
   }
 

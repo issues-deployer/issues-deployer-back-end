@@ -12,10 +12,10 @@ public abstract class AbstractGitAccount implements GitAccount {
   @Nullable
   private final Long id;
 
-  @NotNull
+  @Nullable
   private final User user;
 
-  public AbstractGitAccount(@Nullable Long id, @NotNull User user) {
+  public AbstractGitAccount(@Nullable Long id, @Nullable User user) {
     this.id = id;
     this.user = user;
   }
@@ -33,7 +33,7 @@ public abstract class AbstractGitAccount implements GitAccount {
       return false;
     }
     AbstractGitAccount that = (AbstractGitAccount) o;
-    return Objects.equals(id, that.id) && user.equals(that.user);
+    return Objects.equals(id, that.id) && Objects.equals(user, that.user);
   }
 
   @Override
@@ -56,7 +56,7 @@ public abstract class AbstractGitAccount implements GitAccount {
     }
 
     @Override
-    public AbstractGitAccountBuilder user(@NotNull User user) {
+    public AbstractGitAccountBuilder user(@Nullable User user) {
       this.user = user;
       return this;
     }

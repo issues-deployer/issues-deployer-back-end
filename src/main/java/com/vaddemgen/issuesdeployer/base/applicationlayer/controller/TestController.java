@@ -1,9 +1,10 @@
 package com.vaddemgen.issuesdeployer.base.applicationlayer.controller;
 
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.Issue;
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
-import com.vaddemgen.issuesdeployer.client.gitlab.businesslayer.service.GitClient;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
+import com.vaddemgen.issuesdeployer.base.businesslayer.service.SuperGroupService;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.stream.Stream;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,19 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-  private final GitClient gitClient;
+  private final SuperGroupService superGroupService;
 
-  public TestController(GitClient gitClient) {
-    this.gitClient = gitClient;
+  public TestController(SuperGroupService superGroupService) {
+    this.superGroupService = superGroupService;
   }
 
   @RequestMapping("test")
-  public Stream<Issue> findIssues() throws IOException, InterruptedException {
-    return gitClient.findIssues();
-  }
-
-  @RequestMapping("project")
-  public Stream<Project> findProjects() throws IOException, InterruptedException {
-    return gitClient.findProjects();
+  public Stream<SuperGroup> findIssues() throws IOException, InterruptedException {
+    return superGroupService.findSuperGroupsTree(
+        User.builder()
+            .firstName("Agent")
+            .lastName("Smith 1")
+            .username("agent_smith_1")
+            .gitAccounts(Collections.emptyList())
+            .build()
+    );
   }
 }
