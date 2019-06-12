@@ -28,3 +28,7 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+### Project ###
+application-dev.yml
+docker/containers/*/.env

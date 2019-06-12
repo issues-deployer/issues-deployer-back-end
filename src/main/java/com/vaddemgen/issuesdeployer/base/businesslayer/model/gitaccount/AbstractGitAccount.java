@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public abstract class AbstractGitAccount implements GitAccount {
 
+  private static final long serialVersionUID = -3874608015069708289L;
+
   @Nullable
   private final Long id;
 

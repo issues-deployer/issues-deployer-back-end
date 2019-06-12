@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 @Builder
 public final class Project implements DomainModel {
 
+  private static final long serialVersionUID = 1330099520409591266L;
+
   private final long id;
 
   @NotNull

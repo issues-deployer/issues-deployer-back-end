@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public final class SuperGroup extends Group {
 
+  private static final long serialVersionUID = -5605482196809175130L;
+
   @Nullable
   private final GitAccount gitAccount;
 

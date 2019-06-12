@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public final class SubGroup extends Group {
 
+  private static final long serialVersionUID = -13083789785434619L;
+
   @Nullable
   private final SuperGroup superGroup;
 

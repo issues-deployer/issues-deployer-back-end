@@ -1,2 +1,10 @@
 server:
   port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://100.0.10.2:5432/issues-deployer
+    username: issues-deployer
+    password: issues-deployer
+  redis:
+    host: 100.0.10.3
+    password: issues-deployer

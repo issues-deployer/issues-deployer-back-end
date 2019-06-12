@@ -1,6 +1,7 @@
 package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,9 @@ import org.jetbrains.annotations.Nullable;
 
 @AllArgsConstructor
 @Getter
-public final class GitLabGroupDto {
+public final class GitLabGroupDto implements Serializable {
+
+  private static final long serialVersionUID = 8134241300991642789L;
 
   private final long id;
 

@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public final class GitLabAccount extends AbstractGitAccount {
 
+  private static final long serialVersionUID = 6552417711945483815L;
+
   @NotNull
   private final String token;
 

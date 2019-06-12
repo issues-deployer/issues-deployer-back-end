@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public abstract class Group implements DomainModel {
 
+  private static final long serialVersionUID = 6808378032323148790L;
+
   final long id;
 
   @NotNull

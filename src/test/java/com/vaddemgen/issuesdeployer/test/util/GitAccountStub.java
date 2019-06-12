@@ -1,7 +1,5 @@
 package com.vaddemgen.issuesdeployer.test.util;
 
-import static java.util.Objects.requireNonNull;
-
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.AbstractGitAccount;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 class GitAccountStub extends AbstractGitAccount {
 
-  private GitAccountStub(@Nullable Long id, @NotNull User user) {
+  private static final long serialVersionUID = 3733416469079576731L;
+
+  private GitAccountStub(@Nullable Long id, @Nullable User user) {
     super(id, user);
   }
 
@@ -36,14 +36,14 @@ class GitAccountStub extends AbstractGitAccount {
     }
 
     @Override
-    public GitAccountStubBuilder user(@NotNull User user) {
+    public GitAccountStubBuilder user(@Nullable User user) {
       super.user(user);
       return this;
     }
 
     @Override
     public AbstractGitAccount build() {
-      return new GitAccountStub(id, requireNonNull(user));
+      return new GitAccountStub(id, user);
     }
   }
 }

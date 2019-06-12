@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.0.M3'
-	id 'java'
+    id 'org.springframework.boot' version '2.2.0.M3'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -11,60 +11,63 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
-	maven { url 'https://repo.spring.io/milestone' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-    // implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	// https://mvnrepository.com/artifact/org.jetbrains/annotations
-	implementation 'org.jetbrains:annotations:17+'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-	implementation 'org.apache.commons:commons-lang3:3+'
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation 'org.jetbrains:annotations:17+'
 
-	// https://mvnrepository.com/artifact/com.google.code.gson/gson
-	implementation 'com.google.code.gson:gson:2+'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3+'
 
-	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-	implementation 'org.apache.httpcomponents:httpclient:4+'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2+'
 
-	// https://mvnrepository.com/artifact/com.graphql-java/graphql-spring-boot-starter
-	implementation 'com.graphql-java:graphql-spring-boot-starter:5+'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation 'org.apache.httpcomponents:httpclient:4+'
 
-	// https://mvnrepository.com/artifact/com.graphql-java/graphql-java-tools
-	implementation 'com.graphql-java:graphql-java-tools:5+'
+    // https://mvnrepository.com/artifact/com.graphql-java/graphql-spring-boot-starter
+    implementation 'com.graphql-java:graphql-spring-boot-starter:5+'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.5.RELEASE'
+    // https://mvnrepository.com/artifact/com.graphql-java/graphql-java-tools
+    implementation 'com.graphql-java:graphql-java-tools:5+'
 
-	// https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.1.5.RELEASE'
 
-	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-	testImplementation "org.junit.jupiter:junit-jupiter-api"
+    // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
 
-	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testImplementation 'org.mockito:mockito-core:2+'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-//	runtimeOnly 'org.postgresql:postgresql'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation 'org.mockito:mockito-core:2+'
 
-	compileOnly 'org.projectlombok:lombok:1+'
-	annotationProcessor 'org.projectlombok:lombok:1+'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok:1+'
+    annotationProcessor 'org.projectlombok:lombok:1+'
 }

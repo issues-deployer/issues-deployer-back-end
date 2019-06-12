@@ -1,16 +1,11 @@
 package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer;
 
-import static java.util.stream.Collectors.partitioningBy;
-
 import com.google.gson.Gson;
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.gitclient.datamapperlayer.GitClient;
 import com.vaddemgen.issuesdeployer.gitlabclient.businesslayer.GitLabAccount;
-import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SubGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SuperGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabGroupDto;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,8 +13,6 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
@@ -30,61 +23,66 @@ import org.jetbrains.annotations.NotNull;
 public final class GitLabClient implements GitClient<GitLabAccount> {
 
   private static final String GIT_LAB_API_URL = "https://gitlab.com/api/v4";
-
   private static final String RESOURCE_GROUPS = "groups";
+  private static final Duration GROUPS_TTL = Duration.ofHours(1);
 
   private static final HttpClient httpClient = HttpClient.newBuilder().build();
 
   private final GitLabAccount gitAccount;
+  private final GitLabCacheManager cacheManager;
 
-  public GitLabClient(@NotNull GitLabAccount gitAccount) {
+  public GitLabClient(@NotNull GitLabAccount gitAccount, @NotNull GitLabCacheManager cacheManager) {
     this.gitAccount = gitAccount;
+    this.cacheManager = cacheManager;
   }
 
   @Override
-  public Stream<SuperGroup> findSuperGroups() throws IOException, InterruptedException {
+  public Stream<SuperGroup> findSuperGroups() {
+    return cacheManager.getCachedGroups(gitAccount)
+        .map(List::stream)
+        .orElseGet(this::loadGroups)
+        .filter(groupDto -> groupDto.getParentId().isEmpty())
+        .map(SuperGroupFactory::createSuperGroup);
+  }
 
+  /**
+   * Loads groups by GitLab API.
+   */
+  private Stream<GitLabGroupDto> loadGroups() {
     HttpRequest httpRequest = createHttpRequest(RESOURCE_GROUPS, gitAccount.getToken());
 
-    HttpResponse<String> response = httpClient.send(httpRequest, BodyHandlers.ofString());
+    HttpResponse<String> response;
+    try {
+      response = httpClient.send(httpRequest, BodyHandlers.ofString());
+    } catch (Exception e) {
+      // TODO: handle this exception.
+      throw new RuntimeException(e);
+    }
 
     if (response.statusCode() == HttpStatus.SC_OK) {
-      return toDomainModel(bodyToDtoStream(response));
+      return bodyToDtoStream(response);
     }
+
+    // TODO: Handle not 200 response.
 
     return Stream.empty();
   }
 
-  private Stream<SuperGroup> toDomainModel(@NotNull Stream<GitLabGroupDto> dtoStream) {
-    Map<Boolean, List<GitLabGroupDto>> listMap = dtoStream.collect(
-        partitioningBy(dto -> dto.getParentId().isEmpty()));
-
-    List<GitLabGroupDto> rawSubGroups = listMap.get(false);
-
-    return listMap.get(true) // Super groups
-        .stream()
-        .map(SuperGroupFactory::createSuperGroup)
-        .map(superGroup ->
-            superGroup.clonePartially()
-                .subGroups(findAndFillSubGroups(superGroup, rawSubGroups))
-                .build()
-        );
-  }
-
-  @NotNull
-  private List<SubGroup> findAndFillSubGroups(@NotNull SuperGroup superGroup,
-      @NotNull List<GitLabGroupDto> rawSubGroups) {
-    return rawSubGroups.stream()
-        .filter(dto -> dto.getParentId().isPresent())
-        .filter(dto -> dto.getParentId().get() == superGroup.getId())
-        .map(SubGroupFactory::createSubGroup)
-        .collect(Collectors.toList());
-  }
-
+  /**
+   * Parses the response body to DTOs.
+   */
   private Stream<GitLabGroupDto> bodyToDtoStream(@NotNull HttpResponse<String> response) {
-    return Stream.of(new Gson().fromJson(response.body(), GitLabGroupDto[].class));
+    var groups = List.of(new Gson().fromJson(response.body(), GitLabGroupDto[].class));
+    cacheManager.cacheGroups(gitAccount, groups, GROUPS_TTL);
+    return groups.stream();
   }
 
+  /**
+   * Creates HTTP request to GitLab API.
+   *
+   * @param urlSegment The url segment to be added
+   * @param token      The GitLab private token
+   */
   private HttpRequest createHttpRequest(@NotNull String urlSegment, @NotNull String token) {
     return HttpRequest.newBuilder()
         .uri(URI.create(GIT_LAB_API_URL + "/" + urlSegment))

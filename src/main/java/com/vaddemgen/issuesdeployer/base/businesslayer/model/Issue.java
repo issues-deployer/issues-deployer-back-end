@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 @AllArgsConstructor
 public final class Issue implements DomainModel {
 
+  private static final long serialVersionUID = -5190031094697232656L;
+
   private final long id;
 
   @NotNull

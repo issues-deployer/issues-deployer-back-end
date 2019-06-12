@@ -15,6 +15,7 @@ public final class GitAccountDataMapperImpl implements GitAccountDataMapper {
     // TODO: Implement it.
     return Stream.of(
         GitLabAccount.builder()
+            .id(1L)
             .token("uuTciEGmcQPJjHuUwypb")
             .build()
     );

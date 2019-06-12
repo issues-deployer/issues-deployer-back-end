@@ -9,6 +9,7 @@ import com.vaddemgen.issuesdeployer.base.datamapperlayer.IssueDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.ProjectDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.SubGroupDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.SuperGroupDataMapper;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,8 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
   public Stream<SuperGroup> findSuperGroupsTree(@NotNull User user) {
     return gitAccountDataMapper.findGitAccountsByUser(user)
         .parallel()
-        .flatMap(superGroupDataMapper::findSuperGroups)
+        .map(superGroupDataMapper::findSuperGroups)
+        .flatMap(List::stream)
         .map(this::fillSuperGroup);
   }
 

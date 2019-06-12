@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  db:
+    container_name: issues-deployer-back-end-postgres
+    image: postgres:11
+    env_file: docker/containers/db/.env
+    networks:
+      issues-deployer-back-end-net:
+        ipv4_address: 100.0.10.2
+  redis:
+    container_name: issues-deployer-back-end-redis
+    build:
+      context: docker
+      dockerfile: containers/redis/Dockerfile
+    env_file: docker/containers/redis/.env
+    networks:
+      issues-deployer-back-end-net:
+        ipv4_address: 100.0.10.3
+networks:
+  issues-deployer-back-end-net:
+    name: issues-deployer-back-end-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 100.0.10.0/24
