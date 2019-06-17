@@ -18,11 +18,19 @@ public final class SubGroup extends Group {
   @Nullable
   private final SuperGroup superGroup;
 
-  private SubGroup(long id, @NotNull String code, @Nullable String path,
-      @NotNull String shortName, @Nullable String name,
-      @Nullable URL webUrl, @Nullable String description,
-      @NotNull List<Project> projects, @Nullable SuperGroup superGroup) {
-    super(id, code, path, shortName, name, webUrl, description, projects);
+  private SubGroup(
+      long remoteId,
+      @NotNull String code,
+      @NotNull String shortName,
+      @NotNull List<Project> projects,
+      @Nullable Long id,
+      @Nullable String path,
+      @Nullable String name,
+      @Nullable URL webUrl,
+      @Nullable String description,
+      @Nullable SuperGroup superGroup
+  ) {
+    super(remoteId, code, shortName, projects, id, path, name, webUrl, description);
     this.superGroup = superGroup;
   }
 
@@ -34,6 +42,7 @@ public final class SubGroup extends Group {
   public SubGroupBuilder clonePartially() {
     return builder()
         .id(id)
+        .remoteId(remoteId)
         .code(code)
         .path(path)
         .shortName(shortName)
@@ -67,6 +76,12 @@ public final class SubGroup extends Group {
     @Override
     public SubGroupBuilder code(@NotNull String code) {
       super.code(code);
+      return this;
+    }
+
+    @Override
+    public SubGroupBuilder remoteId(long remoteId) {
+      super.remoteId(remoteId);
       return this;
     }
 
@@ -112,15 +127,15 @@ public final class SubGroup extends Group {
     }
 
     @Override
-    public SubGroupBuilder id(long id) {
+    public SubGroupBuilder id(@Nullable Long id) {
       super.id(id);
       return this;
     }
 
     @Override
     public SubGroup build() {
-      return new SubGroup(id, requireNonNull(code), path, requireNonNull(shortName), name, webUrl,
-          description, projects, superGroup);
+      return new SubGroup(requireNonNull(remoteId), requireNonNull(code), requireNonNull(shortName),
+          projects, id, path, name, webUrl, description, superGroup);
     }
   }
 }

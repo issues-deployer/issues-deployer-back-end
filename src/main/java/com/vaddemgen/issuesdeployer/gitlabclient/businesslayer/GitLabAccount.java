@@ -31,7 +31,7 @@ public final class GitLabAccount extends AbstractGitAccount {
   @Override
   public GitLabAccountBuilder clonePartially() {
     return builder()
-        .id(getId())
+        .id(getId().orElse(null))
         .user(getUser())
         .token(token);
   }

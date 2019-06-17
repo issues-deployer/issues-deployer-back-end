@@ -22,8 +22,8 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.GitAccountDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.IssueDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.ProjectDataMapper;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.SubGroupDataMapper;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.SuperGroupDataMapper;
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SubGroupDataMapper;
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SuperGroupDataMapper;
 import com.vaddemgen.issuesdeployer.test.category.Fast;
 import java.util.List;
 import java.util.Optional;
@@ -148,7 +148,8 @@ class SuperGroupServiceImplTest {
 
     var givenSuperGroup = createSuperGroupAndMock(givenGitAccount, mockedSuperGroupDataMapper);
 
-    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, mockedSubGroupDataMapper);
+    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, givenGitAccount,
+        mockedSubGroupDataMapper);
 
     Project givenProject = createProjectAndMock(givenSuperGroup, mockedProjectDataMapper);
 
@@ -209,7 +210,8 @@ class SuperGroupServiceImplTest {
 
     var givenSuperGroup = createSuperGroupAndMock(givenGitAccount, mockedSuperGroupDataMapper);
 
-    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, mockedSubGroupDataMapper);
+    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, givenGitAccount,
+        mockedSubGroupDataMapper);
 
     Project givenProject1 = createProjectAndMock(givenSubGroup, mockedProjectDataMapper);
 
@@ -285,7 +287,8 @@ class SuperGroupServiceImplTest {
 
     var givenSuperGroup = createSuperGroupAndMock(givenGitAccount, mockedSuperGroupDataMapper);
 
-    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, mockedSubGroupDataMapper);
+    SubGroup givenSubGroup = createSubGroupAndMock(givenSuperGroup, givenGitAccount,
+        mockedSubGroupDataMapper);
 
     Project givenProject1 = createProjectAndMock(givenSubGroup, mockedProjectDataMapper);
 
@@ -360,11 +363,12 @@ class SuperGroupServiceImplTest {
   }
 
   private SubGroup createSubGroupAndMock(SuperGroup givenSuperGroup,
+      GitAccount givenGitAccount,
       SubGroupDataMapper mockedSubGroupDataMapper) {
     var givenSubGroup = createSubGroup(givenSuperGroup);
     doReturn(Stream.of(givenSubGroup))
         .when(mockedSubGroupDataMapper)
-        .findSubGroupsBySuperGroup(eq(givenSuperGroup));
+        .findSubGroupsBySuperGroup(eq(givenGitAccount), eq(givenSuperGroup));
     return givenSubGroup;
   }
 

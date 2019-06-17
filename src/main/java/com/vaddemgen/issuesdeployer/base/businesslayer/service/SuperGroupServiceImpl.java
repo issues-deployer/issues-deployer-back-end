@@ -2,14 +2,14 @@ package com.vaddemgen.issuesdeployer.base.businesslayer.service;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.GitAccountDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.IssueDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.ProjectDataMapper;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.SubGroupDataMapper;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.SuperGroupDataMapper;
-import java.util.List;
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SubGroupDataMapper;
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SuperGroupDataMapper;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +42,19 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
   public Stream<SuperGroup> findSuperGroupsTree(@NotNull User user) {
     return gitAccountDataMapper.findGitAccountsByUser(user)
         .parallel()
-        .map(superGroupDataMapper::findSuperGroups)
-        .flatMap(List::stream)
-        .map(this::fillSuperGroup);
+        .flatMap(gitAccount ->
+            superGroupDataMapper.findSuperGroups(gitAccount)
+                .map(superGroup -> fillSuperGroup(superGroup, gitAccount))
+        );
   }
 
-  private SuperGroup fillSuperGroup(@NotNull SuperGroup superGroup) {
+  private SuperGroup fillSuperGroup(
+      @NotNull SuperGroup superGroup,
+      @NotNull GitAccount gitAccount
+  ) {
     return superGroup.clonePartially()
         .subGroups(
-            subGroupDataMapper.findSubGroupsBySuperGroup(superGroup)
+            subGroupDataMapper.findSubGroupsBySuperGroup(gitAccount, superGroup)
                 .parallel()
                 .map(this::fillSubGroup)
                 .collect(Collectors.toList())

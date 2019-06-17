@@ -1,12 +1,11 @@
-package com.vaddemgen.issuesdeployer.base.datamapperlayer;
+package com.vaddemgen.issuesdeployer.base.datamapperlayer.group;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
-import java.util.List;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 public interface SuperGroupDataMapper {
 
-  @NotNull
-  List<SuperGroup> findSuperGroups(@NotNull GitAccount gitAccount);
+  Stream<SuperGroup> findSuperGroups(@NotNull GitAccount gitAccount);
 }

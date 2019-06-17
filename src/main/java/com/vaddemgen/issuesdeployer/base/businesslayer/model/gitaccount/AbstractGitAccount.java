@@ -2,6 +2,7 @@ package com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +17,10 @@ public abstract class AbstractGitAccount implements GitAccount {
 
   @Nullable
   private final User user;
+
+  public final Optional<Long> getId() {
+    return Optional.ofNullable(id);
+  }
 
   public AbstractGitAccount(@Nullable Long id, @Nullable User user) {
     this.id = id;

@@ -22,6 +22,7 @@ public class TestController {
   public Stream<SuperGroup> findIssues() throws IOException, InterruptedException {
     return superGroupService.findSuperGroupsTree(
         User.builder()
+            .id(1L)
             .firstName("Agent")
             .lastName("Smith 1")
             .username("agent_smith_1")

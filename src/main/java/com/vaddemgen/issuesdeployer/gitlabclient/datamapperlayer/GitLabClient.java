@@ -1,11 +1,14 @@
 package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer;
 
 import com.google.gson.Gson;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.gitclient.datamapperlayer.GitClient;
 import com.vaddemgen.issuesdeployer.gitlabclient.businesslayer.GitLabAccount;
+import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SubGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SuperGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabGroupDto;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -42,7 +45,21 @@ public final class GitLabClient implements GitClient<GitLabAccount> {
         .map(List::stream)
         .orElseGet(this::loadGroups)
         .filter(groupDto -> groupDto.getParentId().isEmpty())
-        .map(SuperGroupFactory::createSuperGroup);
+        .map(groupDto -> SuperGroupFactory.createSuperGroup(groupDto, gitAccount));
+  }
+
+  @Override
+  public Stream<SubGroup> findSubGroups(@NotNull SuperGroup superGroup)
+      throws IOException, InterruptedException {
+    return cacheManager.getCachedGroups(gitAccount)
+        .map(List::stream)
+        .orElseGet(this::loadGroups)
+        .filter(groupDto ->
+            groupDto.getParentId()
+                .map(parentId -> parentId == superGroup.getRemoteId())
+                .orElse(false)
+        )
+        .map(SubGroupFactory::createSubGroup);
   }
 
   /**

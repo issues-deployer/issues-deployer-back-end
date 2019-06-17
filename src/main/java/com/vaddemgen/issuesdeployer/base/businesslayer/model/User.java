@@ -3,6 +3,7 @@ package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,10 @@ public final class User implements DomainModel {
 
   public Stream<GitAccount> getGitAccounts() {
     return gitAccounts.stream();
+  }
+
+  public Optional<Long> getId() {
+    return Optional.ofNullable(id);
   }
 
   @Override

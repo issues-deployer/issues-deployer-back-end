@@ -24,13 +24,22 @@ public final class SuperGroup extends Group {
   @NotNull
   private final List<SubGroup> subGroups;
 
-  public SuperGroup(long id, @NotNull String code, @Nullable String path, @NotNull String shortName,
-      @Nullable String name, @Nullable URL webUrl, @Nullable String description,
-      @NotNull List<Project> projects, @Nullable GitAccount gitAccount,
-      @NotNull List<SubGroup> subGroups) {
-    super(id, code, path, shortName, name, webUrl, description, projects);
+  private SuperGroup(
+      long remoteId,
+      @NotNull String code,
+      @NotNull String shortName,
+      @NotNull List<Project> projects,
+      @Nullable Long id,
+      @Nullable String path,
+      @Nullable String name,
+      @Nullable URL webUrl,
+      @Nullable String description,
+      @Nullable GitAccount gitAccount,
+      @NotNull List<SubGroup> subGroups
+  ) {
+    super(remoteId, code, shortName, projects, id, path, name, webUrl, description);
     this.gitAccount = gitAccount;
-    this.subGroups = Collections.unmodifiableList(subGroups);
+    this.subGroups = List.copyOf(subGroups);
   }
 
   public static SuperGroupBuilder builder() {
@@ -45,6 +54,7 @@ public final class SuperGroup extends Group {
   public SuperGroupBuilder clonePartially() {
     return builder()
         .id(id)
+        .remoteId(remoteId)
         .code(code)
         .path(path)
         .shortName(shortName)
@@ -79,8 +89,14 @@ public final class SuperGroup extends Group {
     private List<SubGroup> subGroups = Collections.emptyList();
 
     @Override
-    public SuperGroupBuilder id(long id) {
+    public SuperGroupBuilder id(@Nullable Long id) {
       super.id(id);
+      return this;
+    }
+
+    @Override
+    public SuperGroupBuilder remoteId(long remoteId) {
+      super.remoteId(remoteId);
       return this;
     }
 
@@ -138,8 +154,9 @@ public final class SuperGroup extends Group {
 
     @Override
     public SuperGroup build() {
-      return new SuperGroup(id, requireNonNull(code), path, requireNonNull(shortName), name, webUrl,
-          description, projects, gitAccount, subGroups);
+      return new SuperGroup(requireNonNull(remoteId), requireNonNull(code),
+          requireNonNull(shortName), projects, id, path, name, webUrl, description, gitAccount,
+          subGroups);
     }
   }
 }

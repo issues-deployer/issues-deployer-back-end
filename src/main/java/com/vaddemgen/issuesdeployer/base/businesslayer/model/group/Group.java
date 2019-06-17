@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,10 @@ public abstract class Group implements DomainModel {
 
   private static final long serialVersionUID = 6808378032323148790L;
 
-  final long id;
+  @Nullable
+  final Long id;
+
+  final long remoteId;
 
   @NotNull
   final String code;
@@ -39,17 +43,26 @@ public abstract class Group implements DomainModel {
   @NotNull
   final List<Project> projects;
 
-  Group(long id, @NotNull String code, @Nullable String path, @NotNull String shortName,
-      @Nullable String name, @Nullable URL webUrl, @Nullable String description,
-      @NotNull List<Project> projects) {
-    this.id = id;
+  Group(
+      long remoteId,
+      @NotNull String code,
+      @NotNull String shortName,
+      @NotNull List<Project> projects,
+      @Nullable Long id,
+      @Nullable String path,
+      @Nullable String name,
+      @Nullable URL webUrl,
+      @Nullable String description
+  ) {
+    this.remoteId = remoteId;
     this.code = code;
-    this.path = path;
     this.shortName = shortName;
+    this.projects = List.copyOf(projects);
+    this.id = id;
+    this.path = path;
     this.name = name;
     this.webUrl = webUrl;
     this.description = description;
-    this.projects = Collections.unmodifiableList(projects);
   }
 
   @Override
@@ -57,6 +70,10 @@ public abstract class Group implements DomainModel {
 
   public Stream<Project> getProjects() {
     return projects.stream();
+  }
+
+  public Optional<Long> getId() {
+    return Optional.ofNullable(id);
   }
 
   @Override
@@ -68,7 +85,8 @@ public abstract class Group implements DomainModel {
       return false;
     }
     Group group = (Group) o;
-    return id == group.id
+    return Objects.equals(id, group.id)
+        && remoteId == group.remoteId
         && code.equals(group.code)
         && Objects.equals(path, group.path)
         && shortName.equals(group.shortName)
@@ -79,12 +97,16 @@ public abstract class Group implements DomainModel {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, code);
+    return Objects.hash(id, code, remoteId);
   }
 
   protected static abstract class GroupBuilder {
 
-    long id;
+    @Nullable
+    Long id;
+
+    @Nullable
+    Long remoteId;
 
     @Nullable
     String code;
@@ -106,8 +128,13 @@ public abstract class Group implements DomainModel {
 
     List<Project> projects = Collections.emptyList();
 
-    public GroupBuilder id(long id) {
+    public GroupBuilder id(@Nullable Long id) {
       this.id = id;
+      return this;
+    }
+
+    public GroupBuilder remoteId(long remoteId) {
+      this.remoteId = remoteId;
       return this;
     }
 
@@ -142,7 +169,7 @@ public abstract class Group implements DomainModel {
     }
 
     public GroupBuilder projects(@NotNull List<Project> projects) {
-      this.projects = Collections.unmodifiableList(projects);
+      this.projects = List.copyOf(projects);
       return this;
     }
 
