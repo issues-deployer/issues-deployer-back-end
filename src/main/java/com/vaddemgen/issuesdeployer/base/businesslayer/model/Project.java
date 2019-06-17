@@ -1,6 +1,5 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,8 +22,7 @@ public final class Project implements DomainModel {
 
   private final long id;
 
-  @NotNull
-  private final Group group;
+  private final long remoteId;
 
   @NotNull
   private final String code;
@@ -58,7 +56,7 @@ public final class Project implements DomainModel {
   public ProjectBuilder clonePartially() {
     return builder()
         .id(id)
-        .group(group)
+        .remoteId(remoteId)
         .code(code)
         .path(path)
         .name(name)
@@ -79,7 +77,6 @@ public final class Project implements DomainModel {
     }
     Project project = (Project) o;
     return id == project.id
-        && group.equals(project.group)
         && code.equals(project.code)
         && Objects.equals(path, project.path)
         && name.equals(project.name)

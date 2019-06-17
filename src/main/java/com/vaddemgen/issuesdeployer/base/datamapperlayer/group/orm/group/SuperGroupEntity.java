@@ -2,6 +2,7 @@ package com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group;
 
 import static java.util.Collections.emptySet;
 import static java.util.Objects.nonNull;
+import static javax.persistence.CascadeType.REMOVE;
 
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.net.URL;
@@ -27,7 +28,7 @@ public final class SuperGroupEntity extends GroupEntity {
   private static final long serialVersionUID = -7739796240091110001L;
 
   @Nullable
-  @OneToMany(mappedBy = "superGroup")
+  @OneToMany(mappedBy = "superGroup", cascade = REMOVE)
   private Set<SubGroupEntity> subGroups = emptySet();
 
   @Builder

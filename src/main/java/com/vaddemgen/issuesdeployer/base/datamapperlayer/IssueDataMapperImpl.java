@@ -11,6 +11,6 @@ public final class IssueDataMapperImpl implements IssueDataMapper {
 
   @Override
   public Stream<Issue> findIssuesByProject(@NotNull Project project) {
-    return null;
+    return Stream.empty();
   }
 }

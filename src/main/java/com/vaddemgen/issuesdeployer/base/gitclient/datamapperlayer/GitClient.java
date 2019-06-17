@@ -1,6 +1,8 @@
 package com.vaddemgen.issuesdeployer.base.gitclient.datamapperlayer;
 
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import java.io.IOException;
@@ -29,4 +31,13 @@ public interface GitClient<T extends GitAccount> {
    */
   Stream<SubGroup> findSubGroups(@NotNull SuperGroup superGroup)
       throws IOException, InterruptedException;
+
+  /**
+   * Finds git projects by a group.
+   *
+   * @param group The group of projects.
+   * @throws IOException          - if an I/O error occurs when sending or receiving
+   * @throws InterruptedException - if the operation is interrupted
+   */
+  Stream<Project> findProjects(@NotNull Group group) throws IOException, InterruptedException;
 }

@@ -1,5 +1,7 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount;
 
+import static javax.persistence.CascadeType.REMOVE;
+
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.SuperGroupEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.DbEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.UserEntity;
@@ -41,7 +43,7 @@ public abstract class GitAccountEntity implements DbEntity {
   @NotNull
   private UserEntity user;
 
-  @OneToMany(mappedBy = "gitAccount")
+  @OneToMany(mappedBy = "gitAccount", cascade = REMOVE)
   private Set<SuperGroupEntity> superGroups;
 
   public GitAccountEntity(@NotNull UserEntity user) {

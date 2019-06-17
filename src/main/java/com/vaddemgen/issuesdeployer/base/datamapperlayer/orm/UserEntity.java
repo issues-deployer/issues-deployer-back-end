@@ -1,6 +1,7 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.orm;
 
 import static java.util.Objects.nonNull;
+import static javax.persistence.CascadeType.REMOVE;
 
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public final class UserEntity implements DbEntity {
   @Size(min = 1, max = 128)
   private String lastName;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = REMOVE)
   @Nullable
   private Set<GitAccountEntity> gitAccounts;
 
