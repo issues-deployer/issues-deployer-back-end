@@ -1,5 +1,6 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.group;
 
+import static com.vaddemgen.issuesdeployer.base.datamapperlayer.group.factory.SubGroupEntityFactory.createSubGroupEntity;
 import static java.util.stream.Collectors.toList;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
@@ -14,25 +15,32 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public final class SubGroupDataMapperImpl implements SubGroupDataMapper {
+public class SubGroupDataMapperImpl implements SubGroupDataMapper {
 
   private final GitClientFactory gitClientFactory;
-  private final SubGroupEntityDataMapper subGroupEntityDataMapper;
   private final SubGroupRepository subGroupRepository;
   private final SuperGroupRepository superGroupRepository;
 
+  // Self autowired
+  private SubGroupDataMapperImpl self;
+
   public SubGroupDataMapperImpl(
       @NotNull GitClientFactory gitClientFactory,
-      @NotNull SubGroupEntityDataMapper subGroupEntityDataMapper,
       @NotNull SubGroupRepository subGroupRepository,
       @NotNull SuperGroupRepository superGroupRepository) {
     this.gitClientFactory = gitClientFactory;
-    this.subGroupEntityDataMapper = subGroupEntityDataMapper;
     this.subGroupRepository = subGroupRepository;
     this.superGroupRepository = superGroupRepository;
+  }
+
+  @Autowired
+  public void setSelf(SubGroupDataMapperImpl subGroupDataMapper) {
+    this.self = subGroupDataMapper;
   }
 
   @Override
@@ -62,12 +70,7 @@ public final class SubGroupDataMapperImpl implements SubGroupDataMapper {
       List<SubGroup> subGroups = gitClient.findSubGroups(superGroup).collect(toList());
 
       if (!subGroups.isEmpty()) {
-        subGroupEntityDataMapper.saveSubGroups(
-            superGroup.clonePartially()
-                .gitAccount(gitAccount)
-                .build(),
-            subGroups
-        );
+        self.saveSubGroups(gitAccount, superGroup, subGroups);
       }
 
       return subGroups.stream();
@@ -75,5 +78,23 @@ public final class SubGroupDataMapperImpl implements SubGroupDataMapper {
       e.printStackTrace();
     }
     return Stream.empty();
+  }
+
+  @Override
+  @Transactional
+  public void saveSubGroups(
+      @NotNull GitAccount gitAccount,
+      @NotNull SuperGroup superGroup,
+      @NotNull List<SubGroup> subGroups
+  ) {
+    SuperGroupEntity superGroupEntity = superGroupRepository
+        .findOneForShare(superGroup.getId().orElseThrow(IllegalArgumentException::new))
+        .orElseThrow(IllegalArgumentException::new); // TODO: change to ModelNotFoundException
+
+    subGroupRepository.saveAll(
+        subGroups.stream()
+            .map(subGroup -> createSubGroupEntity(subGroup, superGroupEntity))
+            .collect(toList())
+    );
   }
 }
