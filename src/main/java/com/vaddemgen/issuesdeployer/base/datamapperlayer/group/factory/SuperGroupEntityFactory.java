@@ -1,5 +1,7 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.group.factory;
 
+import static java.util.Collections.emptySet;
+
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.SuperGroupEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
@@ -23,6 +25,8 @@ public final class SuperGroupEntityFactory {
         .webUrl(group.getWebUrl())
         .description(group.getDescription())
         .gitAccount(gitAccountEntity)
+        .subGroups(emptySet())
+        .projects(emptySet())
         .build();
   }
 }

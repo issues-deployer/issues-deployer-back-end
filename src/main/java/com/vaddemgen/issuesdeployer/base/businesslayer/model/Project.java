@@ -37,9 +37,6 @@ public final class Project implements DomainModel {
   private final String description;
 
   @Nullable
-  private final ZonedDateTime createdAt;
-
-  @Nullable
   private final ZonedDateTime lastActivityAt;
 
   @Nullable
@@ -61,7 +58,6 @@ public final class Project implements DomainModel {
         .path(path)
         .name(name)
         .description(description)
-        .createdAt(createdAt)
         .lastActivityAt(lastActivityAt)
         .webUrl(webUrl)
         .issues(issues);
@@ -81,7 +77,6 @@ public final class Project implements DomainModel {
         && Objects.equals(path, project.path)
         && name.equals(project.name)
         && Objects.equals(description, project.description)
-        && Objects.equals(createdAt, project.createdAt)
         && Objects.equals(lastActivityAt, project.lastActivityAt)
         && Objects.equals(webUrl, project.webUrl);
   }

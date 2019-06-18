@@ -20,7 +20,7 @@ class GitAccountStub extends AbstractGitAccount {
   @Override
   public @NotNull GitAccountStubBuilder clonePartially() {
     return builder()
-        .id(getId())
+        .id(getId().orElse(null))
         .user(getUser());
   }
 

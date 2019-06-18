@@ -4,6 +4,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Objects.nonNull;
 import static javax.persistence.CascadeType.REMOVE;
 
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.net.URL;
 import java.util.Set;
@@ -33,19 +34,19 @@ public final class SuperGroupEntity extends GroupEntity {
 
   @Builder
   public SuperGroupEntity(
-      @NotNull long remoteId,
+      long remoteId,
       @NotNull GitAccountEntity gitAccount,
       @NotNull String code,
       @NotNull String shortName,
-      @Nullable Set<SubGroupEntity> subGroups,
-      String name,
-      String path,
+      @NotNull String name,
+      @NotNull String path,
+      @NotNull Set<ProjectEntity> projects,
+      @NotNull Set<SubGroupEntity> subGroups,
       URL webUrl,
-      String description,
-      Long id
+      String description
   ) {
-    super(id, remoteId, gitAccount, code, name, shortName, path, webUrl, description);
-    this.subGroups = subGroups;
+    super(remoteId, gitAccount, code, shortName, name, path, projects, webUrl, description);
+    this.subGroups = Set.copyOf(subGroups);
   }
 
   public Stream<SubGroupEntity> getSubGroups() {

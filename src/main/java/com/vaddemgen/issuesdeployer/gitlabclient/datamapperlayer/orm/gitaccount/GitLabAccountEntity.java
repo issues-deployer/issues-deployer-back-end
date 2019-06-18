@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +22,10 @@ public final class GitLabAccountEntity extends GitAccountEntity {
 
   private static final long serialVersionUID = 7234286120840850058L;
 
-  @Column
-  @NotBlank
+  @Column(length = 32)
   @NotNull
+  @NotBlank
+  @Size(min = 1, max = 32)
   private String token;
 
   @Column

@@ -40,19 +40,19 @@ public final class UserEntity implements DbEntity {
   @Column
   @NotBlank
   @NotNull
-  @Size(min = 5, max = 128)
+  @Size(min = 5, max = 64)
   private String username;
 
   @Column
   @NotBlank
   @NotNull
-  @Size(min = 1, max = 128)
+  @Size(min = 1, max = 64)
   private String firstName;
 
   @Column
   @NotBlank
   @NotNull
-  @Size(min = 1, max = 128)
+  @Size(min = 1, max = 64)
   private String lastName;
 
   @OneToMany(mappedBy = "user", cascade = REMOVE)

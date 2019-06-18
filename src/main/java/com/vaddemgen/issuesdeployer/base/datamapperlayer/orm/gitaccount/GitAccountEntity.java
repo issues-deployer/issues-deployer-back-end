@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -39,7 +38,6 @@ public abstract class GitAccountEntity implements DbEntity {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
   @NotNull
   private UserEntity user;
 

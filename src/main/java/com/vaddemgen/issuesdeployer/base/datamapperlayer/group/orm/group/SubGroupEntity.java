@@ -1,7 +1,9 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group;
 
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.net.URL;
+import java.util.Set;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,18 +32,18 @@ public final class SubGroupEntity extends GroupEntity {
 
   @Builder
   public SubGroupEntity(
-      @NotNull long remoteId,
+      long remoteId,
       @NotNull GitAccountEntity gitAccount,
-      @NotNull SuperGroupEntity superGroup,
       @NotNull String code,
       @NotNull String shortName,
-      String name,
-      String path,
+      @NotNull String name,
+      @NotNull String path,
+      @NotNull Set<ProjectEntity> projects,
       URL webUrl,
       String description,
-      Long id
+      @NotNull SuperGroupEntity superGroup
   ) {
-    super(id, remoteId, gitAccount, code, name, shortName, path, webUrl, description);
+    super(remoteId, gitAccount, code, shortName, name, path, projects, webUrl, description);
     this.superGroup = superGroup;
   }
 }

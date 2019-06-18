@@ -15,11 +15,11 @@ public final class SubGroupFactory {
         .id(entity.getId())
         .remoteId(entity.getRemoteId())
         .code(entity.getCode())
-        .name(entity.getName())
+        .name(entity.getName().orElse(null))
         .shortName(entity.getShortName())
-        .path(entity.getPath())
-        .webUrl(entity.getWebUrl())
-        .description(entity.getDescription())
+        .path(entity.getPath().orElse(null))
+        .webUrl(entity.getWebUrl().orElse(null))
+        .description(entity.getDescription().orElse(null))
         .projects(Collections.emptyList())
         .build();
   }
