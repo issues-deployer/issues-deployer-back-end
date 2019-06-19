@@ -1,69 +1,43 @@
 package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.net.URL;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.util.stream.Stream;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 
+@Getter
+@AllArgsConstructor
+@Builder
 public final class GitLabIssueDto implements Serializable {
 
-  private static final long serialVersionUID = 2852036698601623927L;
+  private static final long serialVersionUID = -855054258380401196L;
 
-  private final int number;
-  private final int projectId;
+  @SerializedName("id")
+  private final int remoteId;
+
+  @NonNull
+  @SerializedName("iid")
+  private final String code;
+
+  @NonNull
   private final String title;
-  private final String description;
+
+  @NonNull
   private final String[] labels;
+
+  @NonNull
+  @SerializedName("web_url")
   private final URL webUrl;
 
-  public GitLabIssueDto(int number, int projectId, String title, String description,
-      String[] labels, URL webUrl) {
-    this.number = number;
-    this.projectId = projectId;
-    this.title = title;
-    this.description = description;
-    this.labels = labels;
-    this.webUrl = webUrl;
-  }
+  @NonNull
+  @SerializedName("updated_at")
+  private final String updatedAt;
 
-  public int getNumber() {
-    return number;
-  }
-
-  public int getProjectId() {
-    return projectId;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public String[] getLabels() {
-    return labels;
-  }
-
-  public URL getWebUrl() {
-    return webUrl;
-  }
-
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
-
-  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-  @Override
-  public boolean equals(Object obj) {
-    return EqualsBuilder.reflectionEquals(this, obj);
-  }
-
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this);
+  public Stream<String> getLabels() {
+    return Stream.of(labels);
   }
 }

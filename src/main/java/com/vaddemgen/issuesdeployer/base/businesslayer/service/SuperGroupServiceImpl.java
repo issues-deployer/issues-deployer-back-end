@@ -62,7 +62,7 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
         .projects(
             projectDataMapper.findProjectsByGroup(gitAccount, superGroup)
                 .parallel()
-                .map(this::fillProject)
+                .map(project -> fillProject(gitAccount, project))
                 .collect(Collectors.toList())
         ).build();
   }
@@ -72,14 +72,18 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
     return subGroup.clonePartially()
         .projects(
             projectDataMapper.findProjectsByGroup(gitAccount, subGroup)
-                .map(this::fillProject)
+                .map(project -> fillProject(gitAccount, project))
                 .collect(Collectors.toList())
         ).build();
   }
 
-  private Project fillProject(@NotNull Project project) {
+  private Project fillProject(GitAccount gitAccount, Project project) {
     return project.clonePartially()
-        .issues(issueDataMapper.findIssuesByProject(project).collect(Collectors.toList()))
+        .issues(
+            issueDataMapper
+                .findIssuesByProject(gitAccount, project)
+                .collect(Collectors.toList())
+        )
         .build();
   }
 }

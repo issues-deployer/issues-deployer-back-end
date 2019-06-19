@@ -61,9 +61,7 @@ public class ProjectDataMapperImpl implements ProjectDataMapper {
     var gitClient = gitClientFactory.createGitClient(gitAccount);
     try {
       List<Project> loadedProjects = gitClient.findProjects(group).collect(toList());
-
       self.saveProjects(gitAccount, group, loadedProjects);
-
       return loadedProjects.stream();
     } catch (IOException | InterruptedException e) { // TODO: Handle the exceptions
       e.printStackTrace();

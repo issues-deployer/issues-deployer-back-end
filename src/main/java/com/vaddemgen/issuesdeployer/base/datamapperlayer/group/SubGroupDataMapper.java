@@ -17,7 +17,6 @@ public interface SubGroupDataMapper {
 
   @Transactional
   void saveSubGroups(
-      @NotNull GitAccount gitAccount,
       @NotNull SuperGroup superGroup,
       @NotNull List<SubGroup> subGroups
   );

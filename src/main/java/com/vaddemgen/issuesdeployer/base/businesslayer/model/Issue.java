@@ -1,15 +1,15 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 
 import java.net.URL;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Builder
@@ -20,20 +20,22 @@ public final class Issue implements DomainModel {
 
   private final long id;
 
-  @NotNull
-  private final Project project;
+  private final long remoteId;
 
-  @NotNull
+  @NonNull
+  private final String code;
+
+  @NonNull
   private final String title;
 
-  @Nullable
-  private final String description;
-
-  @NotNull
+  @NonNull
   private final String[] labels;
 
-  @Nullable
+  @NonNull
   private final URL webUrl;
+
+  @NonNull
+  private final ZonedDateTime updatedAt;
 
   public Stream<String> getLabels() {
     return Arrays.stream(labels);
@@ -48,9 +50,9 @@ public final class Issue implements DomainModel {
   public IssueBuilder clonePartially() {
     return builder()
         .id(id)
-        .project(project)
+        .remoteId(remoteId)
+        .code(code)
         .title(title)
-        .description(description)
         .labels(labels)
         .webUrl(webUrl);
   }
@@ -65,15 +67,16 @@ public final class Issue implements DomainModel {
     }
     Issue issue = (Issue) o;
     return id == issue.id &&
-        project.equals(issue.project) &&
-        title.equals(issue.title) &&
-        Objects.equals(description, issue.description) &&
+        remoteId == issue.remoteId &&
+        Objects.equals(code, issue.code) &&
+        Objects.equals(title, issue.title) &&
         Arrays.equals(labels, issue.labels) &&
-        Objects.equals(webUrl, issue.webUrl);
+        Objects.equals(webUrl, issue.webUrl) &&
+        Objects.equals(updatedAt, issue.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, project, title);
+    return Objects.hash(id, remoteId, code);
   }
 }

@@ -70,7 +70,7 @@ public class SubGroupDataMapperImpl implements SubGroupDataMapper {
       List<SubGroup> subGroups = gitClient.findSubGroups(superGroup).collect(toList());
 
       if (!subGroups.isEmpty()) {
-        self.saveSubGroups(gitAccount, superGroup, subGroups);
+        self.saveSubGroups(superGroup, subGroups);
       }
 
       return subGroups.stream();
@@ -83,7 +83,6 @@ public class SubGroupDataMapperImpl implements SubGroupDataMapper {
   @Override
   @Transactional
   public void saveSubGroups(
-      @NotNull GitAccount gitAccount,
       @NotNull SuperGroup superGroup,
       @NotNull List<SubGroup> subGroups
   ) {

@@ -3,16 +3,19 @@ package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer;
 import static java.util.Collections.emptyList;
 
 import com.google.gson.Gson;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.Issue;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.gitclient.datamapperlayer.AbstractGitClient;
 import com.vaddemgen.issuesdeployer.gitlabclient.businesslayer.GitLabAccount;
+import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.IssueFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.ProjectFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SubGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SuperGroupFactory;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabGroupDto;
+import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabIssueDto;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabProjectDto;
 import java.io.IOException;
 import java.net.URI;
@@ -34,10 +37,12 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
   private static final String GIT_LAB_API_URL = "https://gitlab.com/api/v4";
 
   private static final String RESOURCE_GROUPS = "groups";
-  private static final String RESOURCE_PROJECTS = "projects?membership=true&simple=true";
+  private static final String RESOURCE_PROJECTS = "projects/?membership=true&simple=true";
+  private static final String RESOURCE_ISSUES = "projects/%s/issues/"
+      + "?order_by=updated_at&sort=desc&state=opened";
 
-  private static final Duration GROUPS_TTL = Duration.ofHours(1);
-  private static final Duration PROJECTS_TTL = Duration.ofHours(1);
+  private static final Duration GROUPS_TTL = Duration.ofMinutes(5);
+  private static final Duration PROJECTS_TTL = Duration.ofMinutes(5);
 
   private static final HttpClient httpClient = HttpClient.newBuilder().build();
 
@@ -99,6 +104,13 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
         .map(ProjectFactory::createProject);
   }
 
+  @Override
+  public Stream<Issue> findIssues(Project project) throws IOException, InterruptedException {
+    return loadData(String.format(RESOURCE_ISSUES, project.getRemoteId()), GitLabIssueDto[].class)
+        .stream()
+        .map(IssueFactory::createIssue);
+  }
+
   private <T> List<T> loadData(String urlSegment, Class<T[]> clazz)
       throws IOException, InterruptedException {
     HttpRequest httpRequest = createHttpRequest(urlSegment, gitAccount.getToken());
@@ -117,7 +129,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
    * Creates HTTP request to GitLab API.
    *
    * @param urlSegment The url segment to be added
-   * @param token      The GitLab private token
+   * @param token The GitLab private token
    */
   private HttpRequest createHttpRequest(@NotNull String urlSegment, @NotNull String token) {
     return HttpRequest.newBuilder()
@@ -127,31 +139,4 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
         .GET()
         .build();
   }
-
-//  @Override
-//  public Stream<Issue> findIssues() throws IOException, InterruptedException {
-//    HttpRequest httpRequest = HttpRequest.newBuilder()
-//        .uri(URI.create("https://gitlab.com/api/v4/issues"))
-//        .timeout(Duration.ofMinutes(1))
-//        .header("PRIVATE-TOKEN", personalAccessToken)
-//        .GET()
-//        .build();
-//
-//    HttpResponse<String> response = httpClient.send(httpRequest, BodyHandlers.ofString());
-//
-//    if (response.statusCode() == HttpStatus.SC_OK) {
-//      GitLabIssueDto[] gitLabIssueDto = new GsonBuilder()
-//          .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-//          .create()
-//          .fromJson(response.body(), GitLabIssueDto[].class);
-//
-//      System.out.println(Arrays.toString(gitLabIssueDto));
-//    }
-//
-//    System.out.println(response);
-//
-//    // curl -v -H 'PRIVATE-TOKEN: uuTciEGmcQPJjHuUwypb' 'https://gitlab.com/api/v4/groups'
-//
-//    return null;
-//  }
 }
