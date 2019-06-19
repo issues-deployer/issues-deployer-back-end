@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "SubGroup")
 @DiscriminatorValue(SubGroupEntity.TYPE_SUB_GROUP)
 public final class SubGroupEntity extends GroupEntity {
 

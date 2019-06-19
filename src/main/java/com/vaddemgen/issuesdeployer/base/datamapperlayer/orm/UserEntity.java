@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "User")
 @Table(name = "\"user\"")
 public final class UserEntity implements DbEntity {
 

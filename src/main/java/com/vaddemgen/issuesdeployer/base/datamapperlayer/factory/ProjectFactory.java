@@ -11,6 +11,7 @@ public final class ProjectFactory {
 
   public static Project createProject(ProjectEntity project) {
     return Project.builder()
+        .id(project.getId())
         .remoteId(project.getRemoteId())
         .code(project.getCode())
         .path(project.getPath().orElse(null))

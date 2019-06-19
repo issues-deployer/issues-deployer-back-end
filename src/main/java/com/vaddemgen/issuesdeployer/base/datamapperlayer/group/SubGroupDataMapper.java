@@ -16,7 +16,7 @@ public interface SubGroupDataMapper {
   );
 
   @Transactional
-  void saveSubGroups(
+  Stream<SubGroup> saveSubGroups(
       @NotNull SuperGroup superGroup,
       @NotNull List<SubGroup> subGroups
   );

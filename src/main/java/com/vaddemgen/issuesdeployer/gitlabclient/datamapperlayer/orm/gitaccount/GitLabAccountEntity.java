@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "GitLabAccount")
 @Table(name = "git_lab_account")
 public final class GitLabAccountEntity extends GitAccountEntity {
 

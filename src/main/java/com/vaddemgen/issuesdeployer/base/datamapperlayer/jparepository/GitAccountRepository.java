@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface GitAccountRepository extends JpaRepository<GitAccountEntity, Long> {
 
   @Lock(LockModeType.PESSIMISTIC_READ)
-  @Query("from GitAccountEntity where id = :id")
+  @Query("from GitAccount where id = :id")
   Optional<GitAccountEntity> findOneForShare(@Param("id") long id);
 
   List<GitAccountEntity> findAllByUserId(long userId);

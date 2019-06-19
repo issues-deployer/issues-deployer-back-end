@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,8 +30,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "project")
+@Entity(name = "Project")
+@Table(
+    name = "project",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"remoteId", "group_id"})
+)
 public final class ProjectEntity implements DbEntity {
 
   private static final long serialVersionUID = -173492220954178385L;

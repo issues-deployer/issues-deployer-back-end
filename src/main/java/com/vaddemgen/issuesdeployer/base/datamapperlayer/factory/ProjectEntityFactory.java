@@ -21,7 +21,6 @@ public final class ProjectEntityFactory {
         .lastActivityAt(project.getLastActivityAt())
         .webUrl(project.getWebUrl())
         .group(groupEntity)
-        // .issues() // TODO: initialize issues
         .build();
   }
 }

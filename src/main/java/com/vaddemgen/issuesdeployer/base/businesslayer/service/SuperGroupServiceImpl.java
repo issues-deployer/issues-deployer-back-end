@@ -72,6 +72,7 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
     return subGroup.clonePartially()
         .projects(
             projectDataMapper.findProjectsByGroup(gitAccount, subGroup)
+                .parallel()
                 .map(project -> fillProject(gitAccount, project))
                 .collect(Collectors.toList())
         ).build();

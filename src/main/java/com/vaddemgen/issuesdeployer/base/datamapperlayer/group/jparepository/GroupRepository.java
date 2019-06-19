@@ -11,6 +11,6 @@ import org.springframework.data.repository.query.Param;
 public interface GroupRepository<T extends GroupEntity> extends JpaRepository<T, Long> {
 
   @Lock(LockModeType.PESSIMISTIC_READ)
-  @Query("from GroupEntity g where g.id = :id")
+  @Query("from Group g where g.id = :id")
   Optional<T> findOneForShare(@Param("id") long id);
 }

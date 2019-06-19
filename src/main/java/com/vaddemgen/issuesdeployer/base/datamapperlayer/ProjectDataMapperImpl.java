@@ -51,7 +51,7 @@ public class ProjectDataMapperImpl implements ProjectDataMapper {
       @NotNull Group group
   ) {
 
-    var projects = projectRepository.findAllByGroupId(group.getRemoteId());
+    var projects = projectRepository.findAllByGroupId(group.getId().orElse(0L));
 
     if (!projects.isEmpty()) {
       return projects.stream()
@@ -61,24 +61,29 @@ public class ProjectDataMapperImpl implements ProjectDataMapper {
     var gitClient = gitClientFactory.createGitClient(gitAccount);
     try {
       List<Project> loadedProjects = gitClient.findProjects(group).collect(toList());
-      self.saveProjects(gitAccount, group, loadedProjects);
-      return loadedProjects.stream();
+      if (!loadedProjects.isEmpty()) {
+        return self.saveProjects(gitAccount, group, loadedProjects);
+      }
     } catch (IOException | InterruptedException e) { // TODO: Handle the exceptions
       e.printStackTrace();
     }
     return Stream.empty();
   }
 
+  @Override
   @Transactional
-  public void saveProjects(GitAccount gitAccount, Group group, Collection<Project> projects) {
-    GroupEntity groupEntity = groupRepository.findOneForShare(
-        group.getId().orElseThrow(IllegalArgumentException::new)
-    ).orElseThrow(IllegalArgumentException::new);
+  public Stream<Project> saveProjects(GitAccount gitAccount, Group group,
+      Collection<Project> projects) {
+    GroupEntity groupEntity = groupRepository.findOneForShare(group.getId().orElseThrow())
+        .orElseThrow(); // TODO: handle the exception
 
-    projectRepository.saveAll(
-        projects.stream()
-            .map(project -> createProjectEntity(project, groupEntity))
-            .collect(toList())
-    );
+    return projectRepository
+        .saveAll(
+            projects.stream()
+                .map(project -> createProjectEntity(project, groupEntity))
+                .collect(toList())
+        )
+        .stream()
+        .map(ProjectFactory::createProject);
   }
 }

@@ -20,6 +20,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,8 +33,11 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "\"group\"")
+@Entity(name = "Group")
+@Table(
+    name = "\"group\"",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"remoteId", "git_account_id"})
+)
 @DiscriminatorFormula(
     "CASE "
         + "WHEN parent_id IS NULL THEN '" + TYPE_SUPER_GROUP + "' "

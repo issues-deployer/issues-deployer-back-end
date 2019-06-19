@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface SuperGroupRepository extends GroupRepository<SuperGroupEntity> {
 
-  @Query("from SuperGroupEntity g left join fetch g.subGroups where g.gitAccount.id = :gitAccountId")
+  @Query("from SuperGroup g left join fetch g.subGroups where g.gitAccount.id = :gitAccountId")
   List<SuperGroupEntity> findAllByGitAccountId(@Param("gitAccountId") long gitAccountId);
 }

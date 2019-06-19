@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "GitAccount")
 @Table(name = "git_account")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class GitAccountEntity implements DbEntity {

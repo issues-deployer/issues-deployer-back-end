@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "SuperGroup")
 @DiscriminatorValue(SuperGroupEntity.TYPE_SUPER_GROUP)
 public final class SuperGroupEntity extends GroupEntity {
 

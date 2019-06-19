@@ -70,10 +70,8 @@ public class SubGroupDataMapperImpl implements SubGroupDataMapper {
       List<SubGroup> subGroups = gitClient.findSubGroups(superGroup).collect(toList());
 
       if (!subGroups.isEmpty()) {
-        self.saveSubGroups(superGroup, subGroups);
+        return self.saveSubGroups(superGroup, subGroups);
       }
-
-      return subGroups.stream();
     } catch (IOException | InterruptedException e) { // TODO: Handle the exceptions
       e.printStackTrace();
     }
@@ -82,7 +80,7 @@ public class SubGroupDataMapperImpl implements SubGroupDataMapper {
 
   @Override
   @Transactional
-  public void saveSubGroups(
+  public Stream<SubGroup> saveSubGroups(
       @NotNull SuperGroup superGroup,
       @NotNull List<SubGroup> subGroups
   ) {
@@ -90,10 +88,12 @@ public class SubGroupDataMapperImpl implements SubGroupDataMapper {
         .findOneForShare(superGroup.getId().orElseThrow(IllegalArgumentException::new))
         .orElseThrow(IllegalArgumentException::new); // TODO: change to ModelNotFoundException
 
-    subGroupRepository.saveAll(
-        subGroups.stream()
-            .map(subGroup -> createSubGroupEntity(subGroup, superGroupEntity))
-            .collect(toList())
-    );
+    return subGroupRepository
+        .saveAll(
+            subGroups.stream()
+                .map(subGroup -> createSubGroupEntity(subGroup, superGroupEntity))
+                .collect(toList())
+        ).stream()
+        .map(SubGroupFactory::createSubGroup);
   }
 }
