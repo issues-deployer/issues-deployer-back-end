@@ -1,14 +1,21 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.orm;
 
+import static java.util.Collections.emptySet;
+import static java.util.Objects.nonNull;
+import static javax.persistence.CascadeType.REMOVE;
+
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.GroupEntity;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,6 +23,7 @@ import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -68,6 +76,11 @@ public final class ProjectEntity implements DbEntity {
   @Column
   private URL webUrl;
 
+  @NonNull
+  @NotNull
+  @OneToMany(mappedBy = "project", cascade = REMOVE)
+  private Set<IssueEntity> issues;
+
   @Builder
   public ProjectEntity(
       @NotNull Long remoteId,
@@ -77,7 +90,8 @@ public final class ProjectEntity implements DbEntity {
       String path,
       String description,
       ZonedDateTime lastActivityAt,
-      URL webUrl
+      URL webUrl,
+      Set<IssueEntity> issues
   ) {
     this.remoteId = remoteId;
     this.group = group;
@@ -87,6 +101,7 @@ public final class ProjectEntity implements DbEntity {
     this.description = description;
     this.lastActivityAt = lastActivityAt;
     this.webUrl = webUrl;
+    this.issues = nonNull(issues) ? Set.copyOf(issues) : emptySet();
   }
 
   public Optional<String> getPath() {
@@ -103,5 +118,9 @@ public final class ProjectEntity implements DbEntity {
 
   public Optional<URL> getWebUrl() {
     return Optional.ofNullable(webUrl);
+  }
+
+  public Stream<IssueEntity> getIssues() {
+    return nonNull(issues) ? issues.stream() : Stream.empty();
   }
 }

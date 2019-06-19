@@ -27,7 +27,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * DAO (Client) for the GitLab Server.
@@ -48,7 +47,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
 
   private final GitLabCacheManager cacheManager;
 
-  public GitLabClient(@NotNull GitLabAccount gitAccount, @NotNull GitLabCacheManager cacheManager) {
+  public GitLabClient(GitLabAccount gitAccount, GitLabCacheManager cacheManager) {
     super(gitAccount);
     this.cacheManager = cacheManager;
   }
@@ -62,7 +61,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
   }
 
   @Override
-  public Stream<SubGroup> findSubGroups(@NotNull SuperGroup superGroup)
+  public Stream<SubGroup> findSubGroups(SuperGroup superGroup)
       throws IOException, InterruptedException {
     return findGroups()
         .stream()
@@ -87,7 +86,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
   }
 
   @Override
-  public Stream<Project> findProjects(@NotNull Group group)
+  public Stream<Project> findProjects(Group group)
       throws IOException, InterruptedException {
     var optional = cacheManager.getCachedProjects(gitAccount);
     List<GitLabProjectDto> projects;
@@ -131,7 +130,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
    * @param urlSegment The url segment to be added
    * @param token The GitLab private token
    */
-  private HttpRequest createHttpRequest(@NotNull String urlSegment, @NotNull String token) {
+  private HttpRequest createHttpRequest(String urlSegment, String token) {
     return HttpRequest.newBuilder()
         .uri(URI.create(GIT_LAB_API_URL + "/" + urlSegment))
         .timeout(Duration.ofMinutes(1))

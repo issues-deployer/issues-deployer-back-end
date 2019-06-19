@@ -8,7 +8,6 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import java.io.IOException;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a git client for a git server.
@@ -30,7 +29,7 @@ public interface GitClient<T extends GitAccount> {
    * @throws IOException - if an I/O error occurs when sending or receiving
    * @throws InterruptedException - if the operation is interrupted
    */
-  Stream<SubGroup> findSubGroups(@NotNull SuperGroup superGroup)
+  Stream<SubGroup> findSubGroups(SuperGroup superGroup)
       throws IOException, InterruptedException;
 
   /**
@@ -40,7 +39,7 @@ public interface GitClient<T extends GitAccount> {
    * @throws IOException - if an I/O error occurs when sending or receiving
    * @throws InterruptedException - if the operation is interrupted
    */
-  Stream<Project> findProjects(@NotNull Group group) throws IOException, InterruptedException;
+  Stream<Project> findProjects(Group group) throws IOException, InterruptedException;
 
   /**
    * Finds git issues by a project.
