@@ -14,11 +14,11 @@ public final class ProjectFactory {
         .id(project.getId())
         .remoteId(project.getRemoteId())
         .code(project.getCode())
-        .path(project.getPath().orElse(null))
+        .path(project.getPath())
         .name(project.getName())
         .description(project.getDescription().orElse(null))
         .lastActivityAt(project.getLastActivityAt().orElse(null))
-        .webUrl(project.getWebUrl().orElse(null))
+        .webUrl(project.getWebUrl())
         .issues(Collections.emptyList())
         .build();
   }

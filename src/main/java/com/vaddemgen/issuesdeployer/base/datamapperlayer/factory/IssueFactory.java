@@ -14,9 +14,9 @@ public final class IssueFactory {
         .remoteId(entity.getRemoteId())
         .code(entity.getCode())
         .title(entity.getTitle())
-        .labels(entity.getLabels())
+        .labels(entity.getLabels().toArray(String[]::new))
         .webUrl(entity.getWebUrl())
-        .updatedAt(entity.getUpdatedAt())
+        .updatedAt(entity.getUpdatedAt().orElse(null))
         .build();
   }
 }

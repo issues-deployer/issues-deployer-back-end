@@ -25,7 +25,6 @@ public final class SubGroupEntityFactory {
         .path(group.getPath())
         .webUrl(group.getWebUrl())
         .description(group.getDescription())
-        .gitAccount(superGroupEntity.getGitAccount())
         .projects(emptySet())
         .build();
   }

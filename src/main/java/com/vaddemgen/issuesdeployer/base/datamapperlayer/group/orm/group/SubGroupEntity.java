@@ -1,7 +1,6 @@
 package com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group;
 
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.net.URL;
 import java.util.Set;
 import javax.persistence.DiscriminatorValue;
@@ -12,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 @NoArgsConstructor
@@ -25,6 +25,7 @@ public final class SubGroupEntity extends GroupEntity {
 
   private static final long serialVersionUID = -8837164336737806711L;
 
+  @NonNull
   @NotNull
   @ManyToOne
   @JoinColumn(name = "parent_id")
@@ -33,17 +34,16 @@ public final class SubGroupEntity extends GroupEntity {
   @Builder
   public SubGroupEntity(
       long remoteId,
-      @NotNull GitAccountEntity gitAccount,
-      @NotNull String code,
-      @NotNull String shortName,
-      @NotNull String name,
-      @NotNull String path,
-      @NotNull Set<ProjectEntity> projects,
+      @NonNull String code,
+      @NonNull String shortName,
+      @NonNull String name,
+      @NonNull String path,
+      @NonNull Set<ProjectEntity> projects,
       URL webUrl,
       String description,
-      @NotNull SuperGroupEntity superGroup
+      @NonNull SuperGroupEntity superGroup
   ) {
-    super(remoteId, gitAccount, code, shortName, name, path, projects, webUrl, description);
+    super(remoteId, code, shortName, name, path, projects, webUrl, description);
     this.superGroup = superGroup;
   }
 }

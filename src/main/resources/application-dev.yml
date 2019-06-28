@@ -11,3 +11,6 @@ spring:
   redis:
     host: 100.0.10.3
     password: issues-deployer
+#logging.level.org.hibernate:
+#  SQL: DEBUG
+#  type.descriptor.sql.BasicBinder: TRACE

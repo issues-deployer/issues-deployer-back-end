@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@ToString(callSuper = true, doNotUseGetters = true)
 public final class SuperGroup extends Group {
 
   private static final long serialVersionUID = -5605482196809175130L;
@@ -25,11 +27,11 @@ public final class SuperGroup extends Group {
   private final List<SubGroup> subGroups;
 
   private SuperGroup(
+      long id,
       long remoteId,
       @NotNull String code,
       @NotNull String shortName,
       @NotNull List<Project> projects,
-      @Nullable Long id,
       @Nullable String path,
       @Nullable String name,
       @Nullable URL webUrl,
@@ -37,7 +39,7 @@ public final class SuperGroup extends Group {
       @Nullable GitAccount gitAccount,
       @NotNull List<SubGroup> subGroups
   ) {
-    super(remoteId, code, shortName, projects, id, path, name, webUrl, description);
+    super(id, remoteId, code, shortName, projects, path, name, webUrl, description);
     this.gitAccount = gitAccount;
     this.subGroups = List.copyOf(subGroups);
   }
@@ -89,7 +91,7 @@ public final class SuperGroup extends Group {
     private List<SubGroup> subGroups = Collections.emptyList();
 
     @Override
-    public SuperGroupBuilder id(@Nullable Long id) {
+    public SuperGroupBuilder id(long id) {
       super.id(id);
       return this;
     }
@@ -154,8 +156,8 @@ public final class SuperGroup extends Group {
 
     @Override
     public SuperGroup build() {
-      return new SuperGroup(requireNonNull(remoteId), requireNonNull(code),
-          requireNonNull(shortName), projects, id, path, name, webUrl, description, gitAccount,
+      return new SuperGroup(requireNonNull(id), requireNonNull(remoteId), requireNonNull(code),
+          requireNonNull(shortName), projects, path, name, webUrl, description, gitAccount,
           subGroups);
     }
   }

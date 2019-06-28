@@ -7,3 +7,10 @@ spring:
     url: jdbc:postgresql://db:5432/issues-deployer
     username: issues-deployer
     password: YourStrongSecretPassword
+  quartz:
+      # job-store-type: jdbc
+      properties:
+        # org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+        org.quartz.threadPool.threadCount: 5
+logging.level:
+  com.vaddemgen.issuesdeployer.base.scheduler.applicationlayer.job: TRACE

@@ -25,4 +25,11 @@ public final class GitAccountDataMapperImpl implements GitAccountDataMapper {
             .stream()
             .map(GitAccountFactory::createGitAccount);
   }
+
+  @Override
+  public Stream<GitAccount> findAllGitAccounts() {
+    return gitAccountRepository.findAll()
+        .parallelStream()
+        .map(GitAccountFactory::createGitAccount);
+  }
 }

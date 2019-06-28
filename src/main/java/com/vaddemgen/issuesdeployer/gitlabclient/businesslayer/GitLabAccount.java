@@ -2,14 +2,15 @@ package com.vaddemgen.issuesdeployer.gitlabclient.businesslayer;
 
 import static java.util.Objects.requireNonNull;
 
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.AbstractGitAccount;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@ToString(callSuper = true, doNotUseGetters = true)
 public final class GitLabAccount extends AbstractGitAccount {
 
   private static final long serialVersionUID = 6552417711945483815L;
@@ -17,8 +18,8 @@ public final class GitLabAccount extends AbstractGitAccount {
   @NotNull
   private final String token;
 
-  private GitLabAccount(@Nullable Long id, @Nullable User user, @NotNull String token) {
-    super(id, user);
+  private GitLabAccount(long id, @NotNull String token) {
+    super(id);
     this.token = token;
   }
 
@@ -31,8 +32,7 @@ public final class GitLabAccount extends AbstractGitAccount {
   @Override
   public GitLabAccountBuilder clonePartially() {
     return builder()
-        .id(getId().orElse(null))
-        .user(getUser())
+        .id(getId())
         .token(token);
   }
 
@@ -53,7 +53,7 @@ public final class GitLabAccount extends AbstractGitAccount {
 
   @Override
   public int hashCode() {
-    return Objects.hash(token);
+    return Objects.hash(super.hashCode(), token);
   }
 
   public static final class GitLabAccountBuilder extends AbstractGitAccountBuilder {
@@ -62,14 +62,8 @@ public final class GitLabAccount extends AbstractGitAccount {
     private String token;
 
     @Override
-    public GitLabAccountBuilder id(@Nullable Long id) {
+    public GitLabAccountBuilder id(long id) {
       super.id(id);
-      return this;
-    }
-
-    @Override
-    public GitLabAccountBuilder user(@Nullable User user) {
-      super.user(user);
       return this;
     }
 
@@ -80,7 +74,7 @@ public final class GitLabAccount extends AbstractGitAccount {
 
     @Override
     public GitLabAccount build() {
-      return new GitLabAccount(id, user, requireNonNull(token));
+      return new GitLabAccount(id, requireNonNull(token));
     }
   }
 }

@@ -8,4 +8,6 @@ import org.jetbrains.annotations.NotNull;
 public interface GitAccountDataMapper {
 
   Stream<GitAccount> findGitAccountsByUser(@NotNull User user);
+
+  Stream<GitAccount> findAllGitAccounts();
 }

@@ -14,13 +14,12 @@ public final class IssueEntityFactory {
       throw new NullPointerException();
     }
     return IssueEntity.builder()
-        .id(entity.getId())
         .remoteId(entity.getRemoteId())
         .code(entity.getCode())
         .title(entity.getTitle())
         .labels(entity.getLabels().toArray(String[]::new))
         .webUrl(entity.getWebUrl())
-        .updatedAt(entity.getUpdatedAt())
+        .updatedAt(entity.getUpdatedAt().orElse(null))
         .project(projectEntity)
         .build();
   }

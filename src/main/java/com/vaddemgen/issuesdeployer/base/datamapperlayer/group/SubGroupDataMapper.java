@@ -5,19 +5,12 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import java.util.List;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface SubGroupDataMapper {
 
-  Stream<SubGroup> findSubGroupsBySuperGroup(
-      @NotNull GitAccount gitAccount,
-      @NotNull SuperGroup superGroup
-  );
+  Stream<SubGroup> findSubGroupsBySuperGroup(GitAccount gitAccount, SuperGroup superGroup);
 
-  @Transactional
-  Stream<SubGroup> saveSubGroups(
-      @NotNull SuperGroup superGroup,
-      @NotNull List<SubGroup> subGroups
-  );
+  Stream<SubGroup> saveSubGroups(SuperGroup superGroup, List<SubGroup> subGroups);
+
+  Stream<SubGroup> mergeSubGroups(SuperGroup superGroup, List<SubGroup> subGroups);
 }

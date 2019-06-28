@@ -14,6 +14,7 @@ public final class SubGroupFactory {
 
   public static SubGroup createSubGroup(@NotNull GitLabGroupDto dto) {
     return SubGroup.builder()
+        .id(-1)
         .remoteId(dto.getId())
         .code(dto.getPath())
         .path(dto.getPath())

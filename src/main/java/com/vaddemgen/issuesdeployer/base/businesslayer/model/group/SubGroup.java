@@ -19,18 +19,18 @@ public final class SubGroup extends Group {
   private final SuperGroup superGroup;
 
   private SubGroup(
+      long id,
       long remoteId,
       @NotNull String code,
       @NotNull String shortName,
       @NotNull List<Project> projects,
-      @Nullable Long id,
       @Nullable String path,
       @Nullable String name,
       @Nullable URL webUrl,
       @Nullable String description,
       @Nullable SuperGroup superGroup
   ) {
-    super(remoteId, code, shortName, projects, id, path, name, webUrl, description);
+    super(id, remoteId, code, shortName, projects, path, name, webUrl, description);
     this.superGroup = superGroup;
   }
 
@@ -127,15 +127,16 @@ public final class SubGroup extends Group {
     }
 
     @Override
-    public SubGroupBuilder id(@Nullable Long id) {
+    public SubGroupBuilder id(long id) {
       super.id(id);
       return this;
     }
 
     @Override
     public SubGroup build() {
-      return new SubGroup(requireNonNull(remoteId), requireNonNull(code), requireNonNull(shortName),
-          projects, id, path, name, webUrl, description, superGroup);
+      return new SubGroup(requireNonNull(id), requireNonNull(remoteId), requireNonNull(code),
+          requireNonNull(shortName),
+          projects, path, name, webUrl, description, superGroup);
     }
   }
 }

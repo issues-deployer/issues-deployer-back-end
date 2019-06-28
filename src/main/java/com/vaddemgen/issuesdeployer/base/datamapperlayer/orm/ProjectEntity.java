@@ -42,11 +42,11 @@ public final class ProjectEntity implements DbEntity {
   @Id
   @GeneratedValue
   @Column(updatable = false, insertable = false)
-  private Long id;
+  private long id;
 
   @Column
   @NotNull
-  private Long remoteId;
+  private long remoteId;
 
   @ManyToOne
   @NotNull
@@ -87,14 +87,14 @@ public final class ProjectEntity implements DbEntity {
 
   @Builder
   public ProjectEntity(
-      @NotNull Long remoteId,
-      @NotNull GroupEntity group,
-      @NotNull String code,
-      @NotNull String name,
-      String path,
+      long remoteId,
+      @NonNull GroupEntity group,
+      @NonNull String code,
+      @NonNull String name,
+      @NonNull String path,
+      @NonNull URL webUrl,
       String description,
       ZonedDateTime lastActivityAt,
-      URL webUrl,
       Set<IssueEntity> issues
   ) {
     this.remoteId = remoteId;
@@ -108,20 +108,12 @@ public final class ProjectEntity implements DbEntity {
     this.issues = nonNull(issues) ? Set.copyOf(issues) : emptySet();
   }
 
-  public Optional<String> getPath() {
-    return Optional.ofNullable(path);
-  }
-
   public Optional<String> getDescription() {
     return Optional.ofNullable(description);
   }
 
   public Optional<ZonedDateTime> getLastActivityAt() {
     return Optional.ofNullable(lastActivityAt);
-  }
-
-  public Optional<URL> getWebUrl() {
-    return Optional.ofNullable(webUrl);
   }
 
   public Stream<IssueEntity> getIssues() {

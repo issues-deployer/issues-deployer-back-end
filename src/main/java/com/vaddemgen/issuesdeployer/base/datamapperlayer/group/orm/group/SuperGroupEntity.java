@@ -11,13 +11,17 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 @Setter
 @NoArgsConstructor
 @Entity(name = "SuperGroup")
@@ -28,6 +32,11 @@ public final class SuperGroupEntity extends GroupEntity {
 
   private static final long serialVersionUID = -7739796240091110001L;
 
+  @ManyToOne
+  @NotNull
+  @NonNull
+  private GitAccountEntity gitAccount;
+
   @Nullable
   @OneToMany(mappedBy = "superGroup", cascade = REMOVE)
   private Set<SubGroupEntity> subGroups = emptySet();
@@ -35,17 +44,18 @@ public final class SuperGroupEntity extends GroupEntity {
   @Builder
   public SuperGroupEntity(
       long remoteId,
-      @NotNull GitAccountEntity gitAccount,
-      @NotNull String code,
-      @NotNull String shortName,
-      @NotNull String name,
-      @NotNull String path,
-      @NotNull Set<ProjectEntity> projects,
-      @NotNull Set<SubGroupEntity> subGroups,
+      @NonNull GitAccountEntity gitAccount,
+      @NonNull String code,
+      @NonNull String shortName,
+      @NonNull String name,
+      @NonNull String path,
+      @NonNull Set<ProjectEntity> projects,
+      @NonNull Set<SubGroupEntity> subGroups,
       URL webUrl,
       String description
   ) {
-    super(remoteId, gitAccount, code, shortName, name, path, projects, webUrl, description);
+    super(remoteId, code, shortName, name, path, projects, webUrl, description);
+    this.gitAccount = gitAccount;
     this.subGroups = Set.copyOf(subGroups);
   }
 

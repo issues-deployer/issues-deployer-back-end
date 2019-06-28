@@ -16,6 +16,7 @@ public final class SuperGroupFactory {
   public static SuperGroup createSuperGroup(@NotNull GitLabGroupDto dto,
       @NotNull GitLabAccount gitAccount) {
     return SuperGroup.builder()
+        .id(-1)
         .remoteId(dto.getId())
         .code(dto.getPath())
         .path(dto.getPath())

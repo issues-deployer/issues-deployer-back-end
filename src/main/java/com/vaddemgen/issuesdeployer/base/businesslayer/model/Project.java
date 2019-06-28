@@ -4,11 +4,13 @@ import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @AllArgsConstructor
 @Builder
+@ToString(doNotUseGetters = true)
 public final class Project implements DomainModel {
 
   private static final long serialVersionUID = 1330099520409591266L;
@@ -27,7 +30,7 @@ public final class Project implements DomainModel {
   @NotNull
   private final String code;
 
-  @Nullable
+  @NotNull
   private final String path;
 
   @NotNull
@@ -39,7 +42,7 @@ public final class Project implements DomainModel {
   @Nullable
   private final ZonedDateTime lastActivityAt;
 
-  @Nullable
+  @NotNull
   private final URL webUrl;
 
   @NotNull
@@ -63,6 +66,14 @@ public final class Project implements DomainModel {
         .issues(issues);
   }
 
+  public Optional<ZonedDateTime> getLastActivityAt() {
+    return Optional.ofNullable(lastActivityAt);
+  }
+
+  public Optional<String> getDescription() {
+    return Optional.ofNullable(description);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -72,13 +83,14 @@ public final class Project implements DomainModel {
       return false;
     }
     Project project = (Project) o;
-    return id == project.id
-        && code.equals(project.code)
-        && Objects.equals(path, project.path)
-        && name.equals(project.name)
-        && Objects.equals(description, project.description)
-        && Objects.equals(lastActivityAt, project.lastActivityAt)
-        && Objects.equals(webUrl, project.webUrl);
+    return id == project.id &&
+        remoteId == project.remoteId &&
+        code.equals(project.code) &&
+        path.equals(project.path) &&
+        name.equals(project.name) &&
+        Objects.equals(description, project.description) &&
+        Objects.equals(lastActivityAt, project.lastActivityAt) &&
+        webUrl.equals(project.webUrl);
   }
 
   @Override

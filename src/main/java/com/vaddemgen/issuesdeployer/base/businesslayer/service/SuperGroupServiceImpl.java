@@ -10,6 +10,7 @@ import com.vaddemgen.issuesdeployer.base.datamapperlayer.IssueDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.ProjectDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SubGroupDataMapper;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SuperGroupDataMapper;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -86,5 +87,10 @@ public final class SuperGroupServiceImpl implements SuperGroupService {
                 .collect(Collectors.toList())
         )
         .build();
+  }
+
+  @Override
+  public Stream<SuperGroup> mergeSuperGroups(GitAccount gitAccount, List<SuperGroup> superGroups) {
+    return superGroupDataMapper.mergeSuperGroups(gitAccount, superGroups);
   }
 }

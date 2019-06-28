@@ -2,6 +2,8 @@ package com.vaddemgen.issuesdeployer.base.datamapperlayer.orm;
 
 import java.net.URL;
 import java.time.ZonedDateTime;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +14,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +28,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public final class IssueEntity implements DbEntity {
 
   private static final long serialVersionUID = -3572339177177307264L;
@@ -38,6 +37,7 @@ public final class IssueEntity implements DbEntity {
   @Column(updatable = false, insertable = false)
   private long id;
 
+  @NotNull
   @ManyToOne
   private ProjectEntity project;
 
@@ -62,14 +62,43 @@ public final class IssueEntity implements DbEntity {
   @Column
   @NotNull
   @NonNull
-  private String[] labels;
+  private String labels;
 
   @Column
   @NotNull
   @NonNull
   private URL webUrl;
 
-  @NotNull
-  @NonNull
   private ZonedDateTime updatedAt;
+
+  @Builder
+  public IssueEntity(
+      long remoteId,
+      @NonNull ProjectEntity project,
+      @NonNull String code,
+      @NonNull String title,
+      @NonNull String[] labels,
+      @NonNull URL webUrl,
+      @NonNull ZonedDateTime updatedAt
+  ) {
+    this.project = project;
+    this.remoteId = remoteId;
+    this.code = code;
+    this.title = title;
+    setLabels(labels);
+    this.webUrl = webUrl;
+    this.updatedAt = updatedAt;
+  }
+
+  public Optional<ZonedDateTime> getUpdatedAt() {
+    return Optional.ofNullable(updatedAt);
+  }
+
+  public Stream<String> getLabels() {
+    return Stream.of(labels.split(","));
+  }
+
+  public void setLabels(@NonNull String[] labels) {
+    this.labels = String.join(",", labels);
+  }
 }

@@ -2,29 +2,25 @@ package com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@ToString(doNotUseGetters = true)
 public abstract class AbstractGitAccount implements GitAccount {
 
   private static final long serialVersionUID = -3874608015069708289L;
 
-  @Nullable
-  private final Long id;
+  private final long id;
 
-  @Nullable
-  private final User user;
-
-  public final Optional<Long> getId() {
-    return Optional.ofNullable(id);
+  public AbstractGitAccount(long id) {
+    this.id = id;
   }
 
-  public AbstractGitAccount(@Nullable Long id, @Nullable User user) {
-    this.id = id;
-    this.user = user;
+  public final long getId() {
+    return id;
   }
 
   @NotNull
@@ -40,31 +36,24 @@ public abstract class AbstractGitAccount implements GitAccount {
       return false;
     }
     AbstractGitAccount that = (AbstractGitAccount) o;
-    return Objects.equals(id, that.id) && Objects.equals(user, that.user);
+    return id == that.id;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, user);
+    return Objects.hash(id);
   }
 
   public static abstract class AbstractGitAccountBuilder implements GitAccountBuilder {
 
-    @Nullable
-    protected Long id;
+    protected long id;
 
     @Nullable
     protected User user;
 
     @Override
-    public AbstractGitAccountBuilder id(@Nullable Long id) {
+    public AbstractGitAccountBuilder id(long id) {
       this.id = id;
-      return this;
-    }
-
-    @Override
-    public AbstractGitAccountBuilder user(@Nullable User user) {
-      this.user = user;
       return this;
     }
 

@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.REMOVE;
 
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.SuperGroupEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.DbEntity;
+import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.UserEntity;
 import java.util.Set;
 import javax.persistence.Column;
@@ -19,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
@@ -34,8 +34,7 @@ public abstract class GitAccountEntity implements DbEntity {
   @Id
   @GeneratedValue
   @Column(updatable = false, insertable = false)
-  @Nullable
-  private Long id;
+  private long id;
 
   @ManyToOne
   @NotNull
@@ -43,6 +42,9 @@ public abstract class GitAccountEntity implements DbEntity {
 
   @OneToMany(mappedBy = "gitAccount", cascade = REMOVE)
   private Set<SuperGroupEntity> superGroups;
+
+  @OneToMany
+  private Set<ProjectEntity> projects;
 
   public GitAccountEntity(@NotNull UserEntity user) {
     this.user = user;

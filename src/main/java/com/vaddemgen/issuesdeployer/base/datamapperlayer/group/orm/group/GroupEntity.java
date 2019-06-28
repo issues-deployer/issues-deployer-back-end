@@ -7,7 +7,6 @@ import static javax.persistence.CascadeType.REMOVE;
 
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.DbEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
-import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.gitaccount.GitAccountEntity;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -54,15 +52,11 @@ public abstract class GroupEntity implements DbEntity {
   @Id
   @GeneratedValue
   @Column(updatable = false, nullable = false)
-  private Long id;
+  private long id;
 
   @Column
   @NotNull
-  private Long remoteId;
-
-  @ManyToOne
-  @NotNull
-  private GitAccountEntity gitAccount;
+  private long remoteId;
 
   @Column(length = 64)
   @NotNull
@@ -101,7 +95,6 @@ public abstract class GroupEntity implements DbEntity {
 
   GroupEntity(
       long remoteId,
-      @NotNull GitAccountEntity gitAccount,
       @NotNull String code,
       @NotNull String shortName,
       @NotNull String name,
@@ -111,7 +104,6 @@ public abstract class GroupEntity implements DbEntity {
       String description
   ) {
     this.remoteId = remoteId;
-    this.gitAccount = gitAccount;
     this.code = code;
     this.shortName = shortName;
     this.name = name;

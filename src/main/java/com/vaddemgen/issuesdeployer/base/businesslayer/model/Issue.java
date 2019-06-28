@@ -4,12 +4,14 @@ import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Builder
@@ -34,11 +36,15 @@ public final class Issue implements DomainModel {
   @NonNull
   private final URL webUrl;
 
-  @NonNull
+  @Nullable
   private final ZonedDateTime updatedAt;
 
   public Stream<String> getLabels() {
     return Arrays.stream(labels);
+  }
+
+  public Optional<ZonedDateTime> getUpdatedAt() {
+    return Optional.ofNullable(updatedAt);
   }
 
   @Override

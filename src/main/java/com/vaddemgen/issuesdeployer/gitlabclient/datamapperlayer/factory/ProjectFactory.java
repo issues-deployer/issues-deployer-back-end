@@ -15,6 +15,7 @@ public final class ProjectFactory {
 
   public static Project createProject(@NotNull GitLabProjectDto dto) {
     return Project.builder()
+        .id(-1)
         .remoteId(dto.getRemoteId())
         .name(dto.getName())
         .code(dto.getPath())

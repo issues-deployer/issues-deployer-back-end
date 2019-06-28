@@ -6,19 +6,19 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
+@ToString(doNotUseGetters = true)
 public abstract class Group implements DomainModel {
 
   private static final long serialVersionUID = 6808378032323148790L;
 
-  @Nullable
-  final Long id;
+  final long id;
 
   final long remoteId;
 
@@ -44,21 +44,21 @@ public abstract class Group implements DomainModel {
   final List<Project> projects;
 
   Group(
+      long id,
       long remoteId,
       @NotNull String code,
       @NotNull String shortName,
       @NotNull List<Project> projects,
-      @Nullable Long id,
       @Nullable String path,
       @Nullable String name,
       @Nullable URL webUrl,
       @Nullable String description
   ) {
+    this.id = id;
     this.remoteId = remoteId;
     this.code = code;
     this.shortName = shortName;
     this.projects = List.copyOf(projects);
-    this.id = id;
     this.path = path;
     this.name = name;
     this.webUrl = webUrl;
@@ -72,10 +72,6 @@ public abstract class Group implements DomainModel {
     return projects.stream();
   }
 
-  public Optional<Long> getId() {
-    return Optional.ofNullable(id);
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -85,7 +81,7 @@ public abstract class Group implements DomainModel {
       return false;
     }
     Group group = (Group) o;
-    return Objects.equals(id, group.id)
+    return id == group.id
         && remoteId == group.remoteId
         && code.equals(group.code)
         && Objects.equals(path, group.path)
@@ -128,7 +124,7 @@ public abstract class Group implements DomainModel {
 
     List<Project> projects = Collections.emptyList();
 
-    public GroupBuilder id(@Nullable Long id) {
+    public GroupBuilder id(long id) {
       this.id = id;
       return this;
     }

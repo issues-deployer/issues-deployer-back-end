@@ -13,6 +13,7 @@ public final class IssueFactory {
 
   public static Issue createIssue(@NotNull GitLabIssueDto dto) {
     return Issue.builder()
+        .id(-1)
         .remoteId(dto.getRemoteId())
         .code(dto.getCode())
         .title(dto.getTitle())

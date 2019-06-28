@@ -17,8 +17,8 @@ public final class ProjectEntityFactory {
         .code(project.getCode())
         .path(project.getPath())
         .name(project.getName())
-        .description(project.getDescription())
-        .lastActivityAt(project.getLastActivityAt())
+        .description(project.getDescription().orElse(null))
+        .lastActivityAt(project.getLastActivityAt().orElse(null))
         .webUrl(project.getWebUrl())
         .group(groupEntity)
         .build();
