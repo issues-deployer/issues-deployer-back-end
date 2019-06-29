@@ -2,6 +2,7 @@ package com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group;
 
 import static com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.SubGroupEntity.TYPE_SUB_GROUP;
 import static com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.SuperGroupEntity.TYPE_SUPER_GROUP;
+import static java.util.Collections.emptySet;
 import static java.util.Objects.nonNull;
 import static javax.persistence.CascadeType.REMOVE;
 
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.DiscriminatorFormula;
 import org.jetbrains.annotations.Nullable;
@@ -82,6 +84,7 @@ public abstract class GroupEntity implements DbEntity {
   @Size(min = 1, max = 64)
   private String path;
 
+  @NotNull
   @Column
   private URL webUrl;
 
@@ -95,12 +98,12 @@ public abstract class GroupEntity implements DbEntity {
 
   GroupEntity(
       long remoteId,
-      @NotNull String code,
-      @NotNull String shortName,
-      @NotNull String name,
-      @NotNull String path,
-      @NotNull Set<ProjectEntity> projects,
-      URL webUrl,
+      @NonNull String code,
+      @NonNull String shortName,
+      @NonNull String name,
+      @NonNull String path,
+      @NonNull URL webUrl,
+      Set<ProjectEntity> projects,
       String description
   ) {
     this.remoteId = remoteId;
@@ -108,21 +111,9 @@ public abstract class GroupEntity implements DbEntity {
     this.shortName = shortName;
     this.name = name;
     this.path = path;
-    this.projects = Set.copyOf(projects);
+    this.projects = nonNull(projects) ? Set.copyOf(projects) : emptySet();
     this.webUrl = webUrl;
     this.description = description;
-  }
-
-  public Optional<String> getName() {
-    return Optional.ofNullable(name);
-  }
-
-  public Optional<String> getPath() {
-    return Optional.ofNullable(path);
-  }
-
-  public Optional<URL> getWebUrl() {
-    return Optional.ofNullable(webUrl);
   }
 
   public Optional<String> getDescription() {

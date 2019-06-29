@@ -40,21 +40,21 @@ public final class SuperGroupEntity extends GroupEntity {
   private Set<SubGroupEntity> subGroups = emptySet();
 
   @Builder
-  public SuperGroupEntity(
+  private SuperGroupEntity(
       long remoteId,
-      @NonNull GitAccountEntity gitAccount,
-      @NonNull String code,
-      @NonNull String shortName,
-      @NonNull String name,
-      @NonNull String path,
-      @NonNull Set<ProjectEntity> projects,
-      @NonNull Set<SubGroupEntity> subGroups,
+      String code,
+      String shortName,
+      String name,
+      String path,
       URL webUrl,
+      @NonNull GitAccountEntity gitAccount,
+      Set<SubGroupEntity> subGroups,
+      Set<ProjectEntity> projects,
       String description
   ) {
-    super(remoteId, code, shortName, name, path, projects, webUrl, description);
+    super(remoteId, code, shortName, name, path, webUrl, projects, description);
     this.gitAccount = gitAccount;
-    this.subGroups = Set.copyOf(subGroups);
+    this.subGroups = nonNull(subGroups) ? Set.copyOf(subGroups) : emptySet();
   }
 
   public Stream<SubGroupEntity> getSubGroups() {

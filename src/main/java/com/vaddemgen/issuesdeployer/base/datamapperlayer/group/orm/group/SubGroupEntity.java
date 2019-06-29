@@ -32,18 +32,18 @@ public final class SubGroupEntity extends GroupEntity {
   private SuperGroupEntity superGroup;
 
   @Builder
-  public SubGroupEntity(
+  private SubGroupEntity(
       long remoteId,
-      @NonNull String code,
-      @NonNull String shortName,
-      @NonNull String name,
-      @NonNull String path,
-      @NonNull Set<ProjectEntity> projects,
+      String code,
+      String shortName,
+      String name,
+      String path,
       URL webUrl,
-      String description,
-      @NonNull SuperGroupEntity superGroup
+      @NonNull SuperGroupEntity superGroup,
+      Set<ProjectEntity> projects,
+      String description
   ) {
-    super(remoteId, code, shortName, name, path, projects, webUrl, description);
+    super(remoteId, code, shortName, name, path, webUrl, projects, description);
     this.superGroup = superGroup;
   }
 }

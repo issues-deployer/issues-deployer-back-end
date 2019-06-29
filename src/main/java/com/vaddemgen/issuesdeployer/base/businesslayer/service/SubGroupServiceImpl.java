@@ -1,5 +1,6 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.service;
 
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SubGroup;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.SubGroupDataMapper;
@@ -15,6 +16,11 @@ public final class SubGroupServiceImpl implements SubGroupService {
 
   public SubGroupServiceImpl(@NonNull SubGroupDataMapper subGroupDataMapper) {
     this.subGroupDataMapper = subGroupDataMapper;
+  }
+
+  @Override
+  public Stream<SubGroup> getAllBy(@NonNull User user, long superGroupId) {
+    return subGroupDataMapper.findAllBy(user, superGroupId);
   }
 
   @Override

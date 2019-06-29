@@ -27,6 +27,8 @@ public final class GroupQueryResolver implements GraphQLQueryResolver {
     this.subGroupService = subGroupService;
   }
 
+  // Used by GraphQL.
+  @SuppressWarnings("unused")
   public List<SuperGroupDataBean> findAllSuperGroups() {
     User user = getSessionUser();
     return superGroupService.getAllBy(user)
@@ -46,6 +48,9 @@ public final class GroupQueryResolver implements GraphQLQueryResolver {
 
   public List<SubGroupDataBean> findAllSubGroupsBy(long superGroupId,
       DataFetchingEnvironment environment) {
-    return Collections.emptyList();
+    User user = getSessionUser();
+    return subGroupService.getAllBy(user, superGroupId)
+        .map(SubGroupDataBean::of)
+        .collect(Collectors.toList());
   }
 }
