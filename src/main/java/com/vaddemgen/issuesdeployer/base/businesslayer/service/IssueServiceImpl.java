@@ -2,6 +2,7 @@ package com.vaddemgen.issuesdeployer.base.businesslayer.service;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Issue;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.IssueDataMapper;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,6 +16,11 @@ public final class IssueServiceImpl implements IssueService {
 
   public IssueServiceImpl(@NonNull IssueDataMapper issueDataMapper) {
     this.issueDataMapper = issueDataMapper;
+  }
+
+  @Override
+  public Stream<Issue> getIssuesBy(User user, long projectId) {
+    return issueDataMapper.findIssuesBy(user, projectId);
   }
 
   @Override

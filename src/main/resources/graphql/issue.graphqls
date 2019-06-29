@@ -1,0 +1,12 @@
+type Issue {
+    id: ID!
+    code: String!
+    title: String!
+    webUrl: String!
+    labels: [String]!
+    updatedAt: String
+}
+
+extend type Query {
+    findAllIssuesBy(projectId: Int!): [Issue]!
+}
