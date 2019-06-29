@@ -1,45 +1,46 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
+
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@Builder
 public final class User implements DomainModel {
 
   private static final long serialVersionUID = -3139039181217327308L;
-  @Nullable
-  private final Long id;
 
-  @NotNull
+  private final long id;
   private final String username;
-
-  @NotNull
   private final String firstName;
-
-  @NotNull
   private final String lastName;
-
-  @NotNull
   private final List<GitAccount> gitAccounts;
+
+  @Builder
+  public User(
+      long id,
+      @NonNull String username,
+      @NonNull String firstName,
+      @NonNull String lastName,
+      List<GitAccount> gitAccounts
+  ) {
+    this.id = id;
+    this.username = username;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.gitAccounts = nonNull(gitAccounts) ? List.copyOf(gitAccounts) : emptyList();
+  }
 
   public Stream<GitAccount> getGitAccounts() {
     return gitAccounts.stream();
-  }
-
-  public Optional<Long> getId() {
-    return Optional.ofNullable(id);
   }
 
   @Override
@@ -61,7 +62,7 @@ public final class User implements DomainModel {
       return false;
     }
     User user = (User) o;
-    return Objects.equals(id, user.id)
+    return id == user.id
         && username.equals(user.username)
         && firstName.equals(user.firstName)
         && lastName.equals(user.lastName);

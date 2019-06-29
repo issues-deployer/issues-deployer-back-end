@@ -15,7 +15,7 @@ final class GroupEntityUtil {
     to.setName(from.getName());
     to.setPath(from.getPath());
     to.setWebUrl(from.getWebUrl());
-    to.setDescription(from.getDescription());
+    to.setDescription(from.getDescription().orElse(null));
   }
 }
 

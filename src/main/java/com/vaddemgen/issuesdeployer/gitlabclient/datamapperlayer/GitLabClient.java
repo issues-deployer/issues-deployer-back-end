@@ -57,7 +57,7 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
     return findGroups()
         .stream()
         .filter(groupDto -> groupDto.getParentId().isEmpty())
-        .map(groupDto -> SuperGroupFactory.createSuperGroup(groupDto, gitAccount));
+        .map(SuperGroupFactory::createSuperGroup);
   }
 
   @Override

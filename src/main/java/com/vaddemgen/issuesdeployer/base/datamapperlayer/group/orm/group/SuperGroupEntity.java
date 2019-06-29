@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
@@ -37,7 +36,6 @@ public final class SuperGroupEntity extends GroupEntity {
   @NonNull
   private GitAccountEntity gitAccount;
 
-  @Nullable
   @OneToMany(mappedBy = "superGroup", cascade = REMOVE)
   private Set<SubGroupEntity> subGroups = emptySet();
 

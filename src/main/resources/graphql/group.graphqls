@@ -1,0 +1,28 @@
+interface Group {
+    id: ID!
+    code: String!
+    shortName: String!
+    name: String!
+    description: String
+    webUrl: String!
+}
+type SuperGroup implements Group {
+    id: ID!
+    code: String!
+    shortName: String!
+    name: String!
+    description: String
+    webUrl: String!
+}
+type SubGroup implements Group {
+    id: ID!
+    code: String!
+    shortName: String!
+    name: String!
+    description: String
+    webUrl: String!
+}
+type Query {
+    findAllSuperGroups: [SuperGroup]!
+    findAllSubGroupsBy(superGroupId: Int!): [SubGroup]!
+}

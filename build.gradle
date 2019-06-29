@@ -76,4 +76,7 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1+'
     annotationProcessor 'org.projectlombok:lombok:1+'
+
+    // https://mvnrepository.com/artifact/com.graphql-java-kickstart/graphiql-spring-boot-starter
+    compile group: 'com.graphql-java-kickstart', name: 'graphiql-spring-boot-starter', version: '5+'
 }

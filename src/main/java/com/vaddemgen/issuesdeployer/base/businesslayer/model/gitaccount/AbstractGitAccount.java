@@ -1,11 +1,8 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount;
 
-import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @ToString(doNotUseGetters = true)
@@ -23,7 +20,6 @@ public abstract class AbstractGitAccount implements GitAccount {
     return id;
   }
 
-  @NotNull
   @Override
   public abstract AbstractGitAccountBuilder clonePartially();
 
@@ -47,9 +43,6 @@ public abstract class AbstractGitAccount implements GitAccount {
   public static abstract class AbstractGitAccountBuilder implements GitAccountBuilder {
 
     protected long id;
-
-    @Nullable
-    protected User user;
 
     @Override
     public AbstractGitAccountBuilder id(long id) {

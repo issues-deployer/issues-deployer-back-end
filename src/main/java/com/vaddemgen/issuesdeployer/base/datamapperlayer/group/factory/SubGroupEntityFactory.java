@@ -24,7 +24,7 @@ public final class SubGroupEntityFactory {
         .shortName(group.getShortName())
         .path(group.getPath())
         .webUrl(group.getWebUrl())
-        .description(group.getDescription())
+        .description(group.getDescription().orElse(null))
         .projects(emptySet())
         .build();
   }

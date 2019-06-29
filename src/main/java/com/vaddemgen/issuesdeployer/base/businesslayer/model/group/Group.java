@@ -1,16 +1,18 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model.group;
 
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
+
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.DomainModel;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @ToString(doNotUseGetters = true)
@@ -22,47 +24,41 @@ public abstract class Group implements DomainModel {
 
   final long remoteId;
 
-  @NotNull
+  @NonNull
   final String code;
 
-  @Nullable
+  @NonNull
   final String path;
 
-  @NotNull
+  @NonNull
   final String shortName;
 
-  @Nullable
+  @NonNull
   final String name;
 
-  @Nullable
+  @NonNull
   final URL webUrl;
 
-  @Nullable
   final String description;
 
-  @NotNull
+  @NonNull
   final List<Project> projects;
 
-  Group(
-      long id,
-      long remoteId,
-      @NotNull String code,
-      @NotNull String shortName,
-      @NotNull List<Project> projects,
-      @Nullable String path,
-      @Nullable String name,
-      @Nullable URL webUrl,
-      @Nullable String description
-  ) {
+  Group(long id, long remoteId, String code, String path, String shortName, String name,
+      URL webUrl, String description, List<Project> projects) {
     this.id = id;
     this.remoteId = remoteId;
     this.code = code;
-    this.shortName = shortName;
-    this.projects = List.copyOf(projects);
     this.path = path;
+    this.shortName = shortName;
     this.name = name;
     this.webUrl = webUrl;
     this.description = description;
+    this.projects = nonNull(projects) ? List.copyOf(projects) : emptyList();
+  }
+
+  public Optional<String> getDescription() {
+    return Optional.ofNullable(description);
   }
 
   @Override
@@ -84,10 +80,10 @@ public abstract class Group implements DomainModel {
     return id == group.id
         && remoteId == group.remoteId
         && code.equals(group.code)
-        && Objects.equals(path, group.path)
+        && path.equals(group.path)
         && shortName.equals(group.shortName)
-        && Objects.equals(name, group.name)
-        && Objects.equals(webUrl, group.webUrl)
+        && name.equals(group.name)
+        && webUrl.equals(group.webUrl)
         && Objects.equals(description, group.description);
   }
 
@@ -98,31 +94,23 @@ public abstract class Group implements DomainModel {
 
   protected static abstract class GroupBuilder {
 
-    @Nullable
     Long id;
 
-    @Nullable
     Long remoteId;
 
-    @Nullable
     String code;
 
-    @Nullable
     String path;
 
-    @Nullable
     String shortName;
 
-    @Nullable
     String name;
 
-    @Nullable
     URL webUrl;
 
-    @Nullable
     String description;
 
-    List<Project> projects = Collections.emptyList();
+    List<Project> projects = emptyList();
 
     public GroupBuilder id(long id) {
       this.id = id;
@@ -134,37 +122,37 @@ public abstract class Group implements DomainModel {
       return this;
     }
 
-    public GroupBuilder code(@NotNull String code) {
+    public GroupBuilder code(@NonNull String code) {
       this.code = code;
       return this;
     }
 
-    public GroupBuilder path(@Nullable String path) {
+    public GroupBuilder path(@NonNull String path) {
       this.path = path;
       return this;
     }
 
-    public GroupBuilder shortName(@NotNull String shortName) {
+    public GroupBuilder shortName(@NonNull String shortName) {
       this.shortName = shortName;
       return this;
     }
 
-    public GroupBuilder name(@Nullable String name) {
+    public GroupBuilder name(@NonNull String name) {
       this.name = name;
       return this;
     }
 
-    public GroupBuilder webUrl(@Nullable URL webUrl) {
+    public GroupBuilder webUrl(@NonNull URL webUrl) {
       this.webUrl = webUrl;
       return this;
     }
 
-    public GroupBuilder description(@Nullable String description) {
+    public GroupBuilder description(String description) {
       this.description = description;
       return this;
     }
 
-    public GroupBuilder projects(@NotNull List<Project> projects) {
+    public GroupBuilder projects(@NonNull List<Project> projects) {
       this.projects = List.copyOf(projects);
       return this;
     }

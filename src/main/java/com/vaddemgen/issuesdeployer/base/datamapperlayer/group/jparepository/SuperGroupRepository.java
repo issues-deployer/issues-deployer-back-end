@@ -9,10 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface SuperGroupRepository extends GroupRepository<SuperGroupEntity> {
 
-  @Query("from SuperGroup g left join fetch g.subGroups where g.gitAccount.id = :gitAccountId")
-  List<SuperGroupEntity> findAllByGitAccountId(@Param("gitAccountId") long gitAccountId);
-
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("from SuperGroup g where g.gitAccount.id = :gitAccountId")
   List<SuperGroupEntity> findAllForUpdateBy(@Param("gitAccountId") long gitAccountId);
+
+  @Query("select s from User u join u.gitAccounts g join g.superGroups s where u.id = :userId")
+  List<SuperGroupEntity> findAllByUserId(@Param("userId") long userId);
 }

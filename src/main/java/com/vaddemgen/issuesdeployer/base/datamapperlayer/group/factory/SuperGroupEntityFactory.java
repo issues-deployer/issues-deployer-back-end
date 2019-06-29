@@ -23,7 +23,7 @@ public final class SuperGroupEntityFactory {
         .shortName(group.getShortName())
         .path(group.getPath())
         .webUrl(group.getWebUrl())
-        .description(group.getDescription())
+        .description(group.getDescription().orElse(null))
         .gitAccount(gitAccountEntity)
         .subGroups(emptySet())
         .projects(emptySet())

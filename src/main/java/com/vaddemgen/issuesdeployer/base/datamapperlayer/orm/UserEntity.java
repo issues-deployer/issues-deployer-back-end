@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
@@ -34,7 +33,6 @@ public final class UserEntity implements DbEntity {
   @Id
   @GeneratedValue
   @Column(updatable = false, insertable = false)
-  @Nullable
   private Long id;
 
   @Column
@@ -56,7 +54,6 @@ public final class UserEntity implements DbEntity {
   private String lastName;
 
   @OneToMany(mappedBy = "user", cascade = REMOVE)
-  @Nullable
   private Set<GitAccountEntity> gitAccounts;
 
   @Builder

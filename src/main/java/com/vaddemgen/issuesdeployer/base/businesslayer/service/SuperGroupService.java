@@ -5,11 +5,10 @@ import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccou
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.SuperGroup;
 import java.util.List;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
 
 public interface SuperGroupService {
 
-  Stream<SuperGroup> findSuperGroupsTree(@NotNull User user);
+  Stream<SuperGroup> getAllBy(User user);
 
   Stream<SuperGroup> mergeSuperGroups(GitAccount gitAccount, List<SuperGroup> superGroups);
 }

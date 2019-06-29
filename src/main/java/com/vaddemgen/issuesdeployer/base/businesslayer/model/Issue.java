@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -14,8 +13,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-@Builder
-@AllArgsConstructor
 public final class Issue implements DomainModel {
 
   private static final long serialVersionUID = -5190031094697232656L;
@@ -38,6 +35,18 @@ public final class Issue implements DomainModel {
 
   @Nullable
   private final ZonedDateTime updatedAt;
+
+  @Builder
+  public Issue(long id, long remoteId, String code, String title, String[] labels, URL webUrl,
+      @Nullable ZonedDateTime updatedAt) {
+    this.id = id;
+    this.remoteId = remoteId;
+    this.code = code;
+    this.title = title;
+    this.labels = Objects.nonNull(labels) ? Arrays.copyOf(labels, labels.length) : new String[0];
+    this.webUrl = webUrl;
+    this.updatedAt = updatedAt;
+  }
 
   public Stream<String> getLabels() {
     return Arrays.stream(labels);
@@ -74,10 +83,10 @@ public final class Issue implements DomainModel {
     Issue issue = (Issue) o;
     return id == issue.id &&
         remoteId == issue.remoteId &&
-        Objects.equals(code, issue.code) &&
-        Objects.equals(title, issue.title) &&
+        code.equals(issue.code) &&
+        title.equals(issue.title) &&
         Arrays.equals(labels, issue.labels) &&
-        Objects.equals(webUrl, issue.webUrl) &&
+        webUrl.equals(issue.webUrl) &&
         Objects.equals(updatedAt, issue.updatedAt);
   }
 

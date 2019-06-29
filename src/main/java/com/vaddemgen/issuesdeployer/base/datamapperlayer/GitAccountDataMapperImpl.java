@@ -21,7 +21,7 @@ public final class GitAccountDataMapperImpl implements GitAccountDataMapper {
   public Stream<GitAccount> findGitAccountsByUser(@NotNull User user) {
     return user.getGitAccounts().count() > 0
         ? user.getGitAccounts() :
-        gitAccountRepository.findAllByUserId(user.getId().orElseThrow(IllegalAccessError::new))
+        gitAccountRepository.findAllByUserId(user.getId())
             .stream()
             .map(GitAccountFactory::createGitAccount);
   }

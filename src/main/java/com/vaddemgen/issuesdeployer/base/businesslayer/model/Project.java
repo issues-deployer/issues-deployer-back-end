@@ -1,23 +1,22 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.model;
 
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
+
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@Builder
 @ToString(doNotUseGetters = true)
 public final class Project implements DomainModel {
 
@@ -27,26 +26,38 @@ public final class Project implements DomainModel {
 
   private final long remoteId;
 
-  @NotNull
+  @NonNull
   private final String code;
 
-  @NotNull
+  @NonNull
   private final String path;
 
-  @NotNull
+  @NonNull
   private final String name;
 
-  @Nullable
-  private final String description;
-
-  @Nullable
-  private final ZonedDateTime lastActivityAt;
-
-  @NotNull
+  @NonNull
   private final URL webUrl;
 
-  @NotNull
+  private final String description;
+
+  private final ZonedDateTime lastActivityAt;
+
+  @NonNull
   private final List<Issue> issues;
+
+  @Builder
+  public Project(long id, long remoteId, String code, String path, String name, URL webUrl,
+      String description, ZonedDateTime lastActivityAt, List<Issue> issues) {
+    this.id = id;
+    this.remoteId = remoteId;
+    this.code = code;
+    this.path = path;
+    this.name = name;
+    this.webUrl = webUrl;
+    this.description = description;
+    this.lastActivityAt = lastActivityAt;
+    this.issues = nonNull(issues) ? List.copyOf(issues) : emptyList();
+  }
 
   public Stream<Issue> getIssues() {
     return issues.stream();
@@ -83,14 +94,14 @@ public final class Project implements DomainModel {
       return false;
     }
     Project project = (Project) o;
-    return id == project.id &&
-        remoteId == project.remoteId &&
-        code.equals(project.code) &&
-        path.equals(project.path) &&
-        name.equals(project.name) &&
-        Objects.equals(description, project.description) &&
-        Objects.equals(lastActivityAt, project.lastActivityAt) &&
-        webUrl.equals(project.webUrl);
+    return id == project.id
+        && remoteId == project.remoteId
+        && code.equals(project.code)
+        && path.equals(project.path)
+        && name.equals(project.name)
+        && Objects.equals(description, project.description)
+        && Objects.equals(lastActivityAt, project.lastActivityAt)
+        && webUrl.equals(project.webUrl);
   }
 
   @Override
