@@ -1,6 +1,7 @@
 package com.vaddemgen.issuesdeployer.base.businesslayer.service;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.ProjectDataMapper;
@@ -19,12 +20,17 @@ public final class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public Stream<Project> mergeProjects(Group projectsOwner, List<Project> projects) {
-    return projectDataMapper.mergeProjects(projectsOwner, projects);
+  public Stream<Project> getProjectsBy(@NonNull User user, long groupId) {
+    return projectDataMapper.findProjectsBy(user, groupId);
   }
 
   @Override
   public Stream<Project> getProjectsBy(@NonNull GitAccount gitAccount) {
     return projectDataMapper.findProjectsBy(gitAccount);
+  }
+
+  @Override
+  public Stream<Project> mergeProjects(Group projectsOwner, List<Project> projects) {
+    return projectDataMapper.mergeProjects(projectsOwner, projects);
   }
 }

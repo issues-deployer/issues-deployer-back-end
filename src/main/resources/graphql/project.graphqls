@@ -1,0 +1,12 @@
+type Project {
+    id: ID!
+    code: String!
+    name: String!
+    webUrl: String!
+    description: String
+    lastActivityAt: String
+}
+
+extend type Query {
+    findAllProjectsBy(groupId: Int!): [Project]!
+}

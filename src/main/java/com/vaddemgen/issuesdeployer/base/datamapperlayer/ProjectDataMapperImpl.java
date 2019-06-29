@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.Project;
+import com.vaddemgen.issuesdeployer.base.businesslayer.model.User;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.gitaccount.GitAccount;
 import com.vaddemgen.issuesdeployer.base.businesslayer.model.group.Group;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.factory.ProjectFactory;
@@ -15,8 +16,6 @@ import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.jparepository.Gro
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.group.orm.group.GroupEntity;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.jparepository.ProjectRepository;
 import com.vaddemgen.issuesdeployer.base.datamapperlayer.orm.ProjectEntity;
-import com.vaddemgen.issuesdeployer.base.gitclient.datamapperlayer.GitClientFactory;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,71 +25,28 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProjectDataMapperImpl implements ProjectDataMapper {
 
-  private final GitClientFactory gitClientFactory;
   private final ProjectRepository projectRepository;
   private final GroupRepository<GroupEntity> groupRepository;
 
-  // Self autowired
-  private ProjectDataMapperImpl self;
-
   public ProjectDataMapperImpl(
-      @NotNull GitClientFactory gitClientFactory,
       @NotNull ProjectRepository projectRepository,
       @NotNull GroupRepository<GroupEntity> groupRepository
   ) {
-    this.gitClientFactory = gitClientFactory;
     this.projectRepository = projectRepository;
     this.groupRepository = groupRepository;
   }
 
-  @Autowired
-  public void setSelf(@NotNull ProjectDataMapperImpl self) {
-    this.self = self;
-  }
-
   @Override
-  public Stream<Project> findProjectsByGroup(
-      @NotNull GitAccount gitAccount,
-      @NotNull Group group
-  ) {
-
-    var projects = projectRepository.findAllByGroupId(group.getId());
-
-    if (!projects.isEmpty()) {
-      return projects.stream()
-          .map(ProjectFactory::createProject);
-    }
-
-    var gitClient = gitClientFactory.createGitClient(gitAccount);
-    try {
-      List<Project> loadedProjects = gitClient.findProjects(group).collect(toList());
-      if (!loadedProjects.isEmpty()) {
-        return self.saveProjects(group, loadedProjects);
-      }
-    } catch (IOException | InterruptedException e) { // TODO: Handle the exceptions
-      e.printStackTrace();
-    }
-    return Stream.empty();
-  }
-
-  @Override
-  @Transactional
-  public Stream<Project> saveProjects(
-      @NonNull Group projectsOwner,
-      @NonNull Collection<Project> projects
-  ) {
-    return createProjects(
-        projects,
-        groupRepository.findOneForShare(projectsOwner.getId())
-            .orElseThrow() // TODO: handle the exception
-    );
+  public Stream<Project> findProjectsBy(User user, long groupId) {
+    return projectRepository.findAllBy(user.getId(), groupId)
+        .stream()
+        .map(ProjectFactory::createProject);
   }
 
   @Transactional

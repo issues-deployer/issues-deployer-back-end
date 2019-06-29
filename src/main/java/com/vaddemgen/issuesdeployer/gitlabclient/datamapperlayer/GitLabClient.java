@@ -1,5 +1,6 @@
 package com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer;
 
+import static java.net.http.HttpRequest.BodyPublishers.noBody;
 import static java.util.Collections.emptyList;
 
 import com.google.gson.Gson;
@@ -17,13 +18,18 @@ import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.factory.SuperGr
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabGroupDto;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabIssueDto;
 import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.GitLabProjectDto;
+import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.PaginatorDto;
+import com.vaddemgen.issuesdeployer.gitlabclient.datamapperlayer.model.PaginatorDto.NextPageDetails;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
@@ -88,14 +94,17 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
   @Override
   public Stream<Project> findProjects(Group group)
       throws IOException, InterruptedException {
-    var optional = cacheManager.getCachedProjects(gitAccount);
     List<GitLabProjectDto> projects;
 
-    if (optional.isPresent()) {
-      projects = optional.get();
-    } else {
-      projects = loadData(RESOURCE_PROJECTS, GitLabProjectDto[].class);
-      cacheManager.cacheProjects(gitAccount, projects, PROJECTS_TTL);
+    synchronized (new Object()) {
+      var optional = cacheManager.getCachedProjects(gitAccount);
+
+      if (optional.isPresent()) {
+        projects = optional.get();
+      } else {
+        projects = loadData(RESOURCE_PROJECTS, GitLabProjectDto[].class);
+        cacheManager.cacheProjects(gitAccount, projects, PROJECTS_TTL);
+      }
     }
 
     return projects.stream()
@@ -112,30 +121,69 @@ public final class GitLabClient extends AbstractGitClient<GitLabAccount> {
 
   private <T> List<T> loadData(String urlSegment, Class<T[]> clazz)
       throws IOException, InterruptedException {
-    HttpRequest httpRequest = createHttpRequest(urlSegment, gitAccount.getToken());
+    HttpRequest httpRequest = createHttpHeadRequest(urlSegment, gitAccount.getToken());
     HttpResponse<String> response = httpClient.send(httpRequest, BodyHandlers.ofString());
 
-    if (response.statusCode() == HttpStatus.SC_OK) {
-      return List.of(new Gson().fromJson(response.body(), clazz));
+    if (response.statusCode() != HttpStatus.SC_OK) {
+      return emptyList();
     }
 
-    // TODO: Handle not 200 response.
+    HttpHeaders headers = response.headers();
 
-    return emptyList();
+    PaginatorDto paginator = new PaginatorDto(
+        headers.firstValue("X-Total-Pages").map(Integer::parseInt).orElseThrow(),
+        headers.firstValue("X-Per-Page").map(Integer::parseInt).orElseThrow()
+    );
+
+    Iterator<NextPageDetails> iterator = paginator.iterator();
+
+    List<T> result = new ArrayList<>();
+
+    while (iterator.hasNext()) {
+      NextPageDetails nextPageDetails = iterator.next();
+      httpRequest = createHttpGetRequest(
+          urlSegment
+              + (urlSegment.contains("?") ? "" : "?")
+              + (urlSegment.contains("&") ? "&" : "")
+              + "per_page="
+              + nextPageDetails.getPerPage()
+              + "&page="
+              + nextPageDetails.getNextPage(),
+          gitAccount.getToken()
+      );
+      response = httpClient.send(httpRequest, BodyHandlers.ofString());
+
+      if (response.statusCode() == HttpStatus.SC_OK) {
+        result.addAll(List.of(new Gson().fromJson(response.body(), clazz)));
+      }
+
+      // TODO: Handle not 200 response.
+    }
+
+    return result;
   }
 
   /**
    * Creates HTTP request to GitLab API.
    *
    * @param urlSegment The url segment to be added
-   * @param token The GitLab private token
+   * @param token      The GitLab private token
    */
-  private HttpRequest createHttpRequest(String urlSegment, String token) {
+  private HttpRequest createHttpGetRequest(String urlSegment, String token) {
     return HttpRequest.newBuilder()
         .uri(URI.create(GIT_LAB_API_URL + "/" + urlSegment))
         .timeout(Duration.ofMinutes(1))
         .header("PRIVATE-TOKEN", token)
         .GET()
+        .build();
+  }
+
+  private HttpRequest createHttpHeadRequest(String urlSegment, String token) {
+    return HttpRequest.newBuilder()
+        .uri(URI.create(GIT_LAB_API_URL + "/" + urlSegment))
+        .timeout(Duration.ofMinutes(1))
+        .header("PRIVATE-TOKEN", token)
+        .method("HEAD", noBody())
         .build();
   }
 }
